@@ -51,7 +51,7 @@
 
 
 .email-container, .password-container, .username-container, .name-container, .phoneNumber-container, .email-container, .password-container, .roles-container {
-    width: 300px;
+    width: 400px;
     padding: 10px;
 }
 .email-container > label, .password-container > label, .username-container > label, .name-container > label, .phoneNumber-container > label, .roles-container > label {
@@ -62,6 +62,10 @@
     height:40px;
     border-radius: 10px;
 }
+.input-email, .input-password {
+    width: 380px !important;
+}
+
 
  .login-button {
      width: 400px;
