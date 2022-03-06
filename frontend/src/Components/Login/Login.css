@@ -1,0 +1,92 @@
+.mainContainer {
+    width: 700px;
+    /* height: 600px; */
+    border: 2px solid black;
+    margin: auto;
+    display: grid;
+    grid-template-rows: 100px 500px;
+}
+
+.header-container {
+    border : 2px solid black;
+    background-color: rgb(13, 49, 63);
+}
+
+.heading {
+    margin-left: 30%;
+    color: white;
+    font-size: 20px; 
+    
+}
+
+.create-account-btn {
+    position: absolute;
+    margin-left: 550px;
+    /* margin-top: -80px; */
+    z-index: 1;
+}
+
+.create-btn {
+    padding: 4px;
+    padding: 4px;
+    font-size: 18px;
+    border-radius: 5px;
+    border: 0px;
+
+}
+.create-btn:hover {
+    /* font-weight: bold; */
+    box-shadow: 0px 2px 2px gray;
+}
+
+.login-container { 
+    /* border: 2px solid black; */
+    margin: auto;
+    margin-top: 30px;
+    padding: 10px;
+    height: 300px;
+    box-shadow: 2px 2px 5px gray;
+    border-radius: 10px;
+}
+
+
+.email-container, .password-container, .username-container, .name-container, .phoneNumber-container, .email-container, .password-container, .roles-container {
+    width: 300px;
+    padding: 10px;
+}
+.email-container > label, .password-container > label, .username-container > label, .name-container > label, .phoneNumber-container > label, .roles-container > label {
+    font-size: 20px;
+}
+.email-container > input, .password-container > input, .username-container > input, .name-container > input, .phoneNumber-container > input, .roles-container > input{
+    width: 300px;
+    height:40px;
+    border-radius: 10px;
+}
+
+ .login-button {
+     width: 400px;
+     margin: auto;
+     margin-top: 18px;
+ }
+
+ .login-button > .login-btn {
+     padding: 10px;
+     width: 405px;
+     font-size: 19px;
+     border-radius: 10px;
+     background-color: rgb(121, 55, 117);
+     font-weight: bold;
+     color: white;
+ }
+
+
+
+ .crt-btn {
+    padding: 4px;
+    padding: 4px;
+    font-size: 18px;
+    border-radius: 5px;
+    border: 0px;
+    cursor: pointer;
+
+}
