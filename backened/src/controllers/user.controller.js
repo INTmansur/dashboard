@@ -17,6 +17,26 @@ router.get("/all/user", async (req, res) => {
     return res.status(200).send(user);
 })
 
+router.get("/allUser/user", async (req, res) => {
+    let size = +req.query.size;
+    let page = +req.query.page;
+    let offset = (page - 1) * size;
+
+    const user = await User.find().skip(offset).limit(size).lean().exec();
+
+    const totalUser = await User.find().countDocuments().lean().exec();
+    let totalPage =  Math.ceil(totalUser/ size);
+    console.log(totalPage)
+
+    return res.status(200).send({user, totalPage});
+    
+    
+    
+    
+    
+})
+
+
 router.get("/one/user/:id", async (req, res) => {
     const user = await User.findById(req.params.id).lean().exec();
 
@@ -24,6 +44,7 @@ router.get("/one/user/:id", async (req, res) => {
 })
 
 router.patch("/oneUpdate/user/:id", async (req, res) => {
+    // console.log("this is just test")
     const user = await User.findByIdAndUpdate(req.params.id, req.body, {new : true});
     
     return res.status(200).send(user);
@@ -54,6 +75,43 @@ router.post("/oneUpda/user/:name", async (req, res) => {
     return res.status(200).send(user);
 })
 
+
+router.get("/all/user/user/user", async (req, res) => {
+    // const user = await User.find()..lean().exec();
+    let size = +req.query.size;
+    let page = +req.query.page;
+    let offset = (page - 1) * size;
+
+    const user = await User.find().sort({name : 1}).skip(offset).limit(size).lean().exec();
+
+    const totalUser = await User.find().countDocuments().lean().exec();
+    let totalPage =  Math.ceil(totalUser/ size);
+    console.log(totalPage)
+
+    return res.status(200).send({user, totalPage});
+
+    
+})
+
+router.get("/all/user/user/desc", async (req, res) => {
+    let size = +req.query.size;
+    let page = +req.query.page;
+    let offset = (page - 1) * size;
+
+    const user = await User.find().sort({name : -1}).skip(offset).limit(size).lean().exec();
+
+    const totalUser = await User.find().countDocuments().lean().exec();
+    let totalPage =  Math.ceil(totalUser/ size);
+    console.log(totalPage)
+
+    return res.status(200).send({user, totalPage});
+})
+
+router.get("/all/user/user/name/:name", async (req, res) => {
+    const user = await User.find({name : req.params.name}).lean().exec();
+    
+    return res.status(200).send(user);
+})
 
 
 router.delete("/ondelete/user/:id", async (req, res) => {

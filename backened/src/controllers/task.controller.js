@@ -13,11 +13,14 @@ router.post("/create/task/all", async (req, res) => {
 })
 
 
-router.get("/all/task/all/:id", async (req, res) => {
+router.get("/all/task/all/task/:id", async (req, res) => {
     const task = await Task.find({project_id : req.params.id}).lean().exec();
 
     return res.status(200).send(task);
 })
+
+
+
 
 router.get("/all/task/one/:id", async (req, res) =>{
     const task = await Task.findOne({_id : req.params.id});

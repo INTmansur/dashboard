@@ -17,7 +17,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import Chip from '@mui/material/Chip';
-
+import Pagination from '@mui/material/Pagination';
 
 
 const ITEM_HEIGHT = 48;
@@ -52,6 +52,15 @@ const Project = () => {
         description: "",
         task : []
     }
+
+    const [page, setPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+
+    const handlePageChange = (event, value) => {
+        setPage(value);
+        console.log(value);
+    }
+
     const [createProject, setCreateProject] = useState(initProjectState)
     const handleChangeProject = (e) => {
         const {name, value} = e.target;
@@ -77,15 +86,19 @@ const getAllUser = async () => {
 const handleCreateProjectBtn = async() => {
     // console.log(createProject)
      await axios.post("http://localhost:2233/project/create", createProject);
-     const {data} = await axios.get("http://localhost:2233/project/all");
-    setAllProject(data);
+     const {data} = await axios.get(`http://localhost:2233/project/all?page=${page}&size=5`);
+
+    setAllProject(data.project);
+    setTotalPages(data.totalPage)
 }
 
 
 
 const getAllProject = async () => {
-    const {data} = await axios.get("http://localhost:2233/project/all");
-    setAllProject(data);
+    const {data} = await axios.get(`http://localhost:2233/project/all?page=${page}&size=5`);
+
+    setAllProject(data.project);
+    setTotalPages(data.totalPage)
 }
 
 
@@ -108,8 +121,11 @@ const handleProjectUpdateOne = async (id) => {
     await axios.patch(`http://localhost:2233/project/oneUpdate/${id}`, oneProject);
     getAllProject();
 
-    const {data} = await axios.get("http://localhost:2233/project/all");
-    setAllProject(data);
+    const {data} = await axios.get(`http://localhost:2233/project/all?page=${page}&size=5`);
+
+    setAllProject(data.project);
+    setTotalPages(data.totalPage)
+
 }
 
 
@@ -193,8 +209,9 @@ const handleCreateTaskBtn = async (projectId) => {
 
 
 const handleShowAllTask = async (projectId) => {
-    const {data} = await axios.get(`http://localhost:2233/task/all/task/all/${projectId}`);
+    const {data} = await axios.get(`http://localhost:2233/task/all/task/all/task/${projectId}`);
     setAllTask(data);
+    
 }
 
 
@@ -207,28 +224,43 @@ const handleDeleteProject = async (id) => {
 
     if(z === true) {
         await axios.delete(`http://localhost:2233/project/ondelete/${id}`);
-        const {data} = await axios.get("http://localhost:2233/project/all");
-        setAllProject(data);
+        const {data} = await axios.get(`http://localhost:2233/project/all?page=${page}&size=5`);
+
+        setAllProject(data.project);
+        setTotalPages(data.totalPage)
+
     } else {
-        const {data} = await axios.get("http://localhost:2233/project/all");
-        setAllProject(data);
+        const {data} = await axios.get(`http://localhost:2233/project/all?page=${page}&size=5`);
+
+        setAllProject(data.project);
+        setTotalPages(data.totalPage)
+
     }
     
 }
 
+
     useEffect(() => {
         getAllProject();
         getAllUser();
+        // handleShowAllTask();
 
-    }, [allProject])
+    }, [page])
 
 
     return ( 
         <div className = "container-fluid">
+
+
+
+
+
+
+
             <div className = "row">
                 <div className="row">
-                    <div className="col-11"></div>
-                    <div className="col-1">
+                    <div className="col-10"></div>
+                    <div className="col-2">
                     <button type="button" className="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">
                          Create Project
                     </button>
@@ -540,7 +572,7 @@ const handleDeleteProject = async (id) => {
 
 
                                             {/* <div className = "col-12"> */}
-                                                <Task SetAllTask = {setAllTask} AllTask = {allTask} projectID = {e._id}/>
+                                                <Task handleTask = {handleShowAllTask} SetAllTask = {setAllTask} AllTask = {allTask} projectID = {e._id}/>
                                                
                                             {/* </div> */}
                                             
@@ -596,7 +628,20 @@ const handleDeleteProject = async (id) => {
             </div>
 
 
-
+            
+            <div className = "row">
+                <div className = "col-8"></div>
+                <div className = "col-4">
+                    <nav aria-label="...">
+                        <ul className="pagination">
+                            
+                            <Pagination page = {page} onChange = {handlePageChange} count={totalPages} variant="outlined" />
+                            
+                            
+                        </ul>
+                    </nav>
+                </div>
+            </div>
 
 
 

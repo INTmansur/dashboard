@@ -1,15 +1,18 @@
 
 import {useState, useEffect} from "react";
+import Pagination from '@mui/material/Pagination';
 
 import axios from "axios";
 
 const Role = () => {
 const [AllUser, setAllUser] = useState([]);
 
-
+    const [page, setPage] = useState(1);
+    const [totalPage, setTotalPage] = useState(1);
 const handleGetAllUser = async () => {
-    const {data} = await axios.get("http://localhost:2233/user/all/user");
-    setAllUser(data);
+    const {data} = await axios.get(`http://localhost:2233/user/allUser/user?page=${page}&size=5`);
+    setAllUser(data.user);
+    setTotalPage(data.totalPage);
 }
 
 
@@ -34,30 +37,61 @@ const handleUpdateUserOneChange = (e) => {
 
 
 const handleUserUpdateOne = async (id) => {
+    delete oneUser._id; 
+    // console.log(oneUser);
     await axios.patch(`http://localhost:2233/user/oneUpdate/user/${id}`, oneUser);
-    const {data} = await axios.get("http://localhost:2233/user/all/user");
-    setAllUser(data);
+    const {data} = await axios.get(`http://localhost:2233/user/allUser/user?page=${page}&size=5`);
+    setAllUser(data.user);
+    setTotalPage(data.totalPage);
 }
 
 const handleDeleteUser = async (id) => {
 
 }
 
+const [Name, setName] = useState("");
+
+const handleNameSearch = async (name) => {
+
+    if(name === "") {
+        const {data} = await axios.get(`http://localhost:2233/user/allUser/user?page=${page}&size=5`);
+    setAllUser(data.user);
+    setTotalPage(data.totalPage);
+    } else {
+        const {data} = await axios.get(`http://localhost:2233/user/all/user/user/name/${name}`)
+       setAllUser(data);
+    }
+    
+
+}
+const handlePageChange = (event, value) => {
+    setPage(value);
+}
+
+
 useEffect(() => {
     handleGetAllUser();
-}, [AllUser])
+}, [page])
 
     return (
         <div className = "container-fluid">
+
+
             <div className = "row">
                 <div className="row">
-                <div className="col-3">
+                <div className="col-5">
                     <h2>
                         User Role management
                     </h2>
                         <hr/>
                     </div>
-                    <div className="col-8"></div>
+                    <div className="col-5">
+                    <label className = "form-label">Search by Name</label>
+                        <input onChange = {(e) => {
+                            setName(e.target.value);
+                            handleNameSearch(e.target.value);
+                        }} value = {Name} type = "text" name = "name" className = "form-control" placeholder = "enter the name" />
+                    </div>
                    
                 </div>
             </div>
@@ -108,7 +142,10 @@ useEffect(() => {
 
 
                                                 {/* modal body */}
-                                                <form onSubmit = {(a) => a.preventDefault()} className="row g-3 needs-validation" novalidate>
+                                                <form onSubmit = {(a) => {
+                                                      a.preventDefault();
+                                                    //   handleUserUpdateOne(e._id)
+                                                    }} className="row g-3 needs-validation" novalidate>
                                                 
                                                     <div className="col-md-11">
                                                         <label for="validationCustom01" className="form-label">User Role</label>
@@ -141,6 +178,20 @@ useEffect(() => {
                 </table>
             </div>
         </div>
+
+        <div className = "row">
+                <div className = "col-8"></div>
+                <div className = "col-4">
+                    <nav aria-label="...">
+                        <ul className="pagination">
+                            
+                            <Pagination page = {page} onChange = {handlePageChange} count={totalPage} variant="outlined" />
+                            
+                            
+                        </ul>
+                    </nav>
+                </div>
+            </div>
     </div>
     )
 }

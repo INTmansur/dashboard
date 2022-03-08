@@ -90,11 +90,11 @@ if(isLogin) {
             <div className = "login-container">
                 <div className = "email-container">
                     <label>Email : </label><br/>
-                    <input onChange = {(e) => handleLoginData(e)} name = "email" type = "email" className = "input-email" />
+                    <input onChange = {(e) => handleLoginData(e)} name = "email" type = "email" className = "input-email" required />
                 </div>
                 <div className = "password-container">
                     <label>Password: </label><br />
-                    <input onChange = {(e) => handleLoginData(e)} name = "password" type = "text" className = "input-password" />
+                    <input onChange = {(e) => handleLoginData(e)} name = "password" type = "password" className = "input-password" required/>
                 </div>
                 <div className = "login-button">
                     <button onClick = {handleLogin}  className = "login-btn">Login</button>
@@ -138,7 +138,7 @@ if(isLogin) {
                     </div>
                     <div className = "password-container">
                         <label>Password : </label><br />
-                        <input onChange = {(e) => handleChange(e)} type = "text" name = "password" className = "password-input" required />
+                        <input onChange = {(e) => handleChange(e)} type = "password" name = "password" className = "password-input" required />
                     </div>
                    
                     {/* <div className = "permissions-container">

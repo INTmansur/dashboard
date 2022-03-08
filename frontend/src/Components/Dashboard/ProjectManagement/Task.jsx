@@ -2,7 +2,7 @@
 import {useState, useEffect} from "react";
 import axios from "axios";
 
-const Task = ({SetAllTask, AllTask, projectID}) => {
+const Task = ({SetAllTask, AllTask, projectID, handleShowAllTask}) => {
 
 // console.log(AllTask, projectID);
 
@@ -28,10 +28,13 @@ const handleUpdateTaskOneChange = (e) => {
 
 
 const handleTaskUpdateOne = async (id) => {
-    await axios.patch(`http://localhost:2233/task/all/task/updateOne/${id}`, oneTask)
+    if(oneTask.name !== "" || oneTask.description !== "") {
+        await axios.patch(`http://localhost:2233/task/all/task/updateOne/${id}`, oneTask)
 
-    const {data} = await axios.get(`http://localhost:2233/task/all/task/all/${projectID}`);
-    SetAllTask(data);
+        const {data} = await axios.get(`http://localhost:2233/task/all/task/all/${projectID}`);
+        SetAllTask(data);
+    }
+    
 }
 
 
@@ -46,14 +49,18 @@ const handleDeleteTask = async (id) => {
             taskId : id
         }
 
-        await axios.post(`http://localhost:2233/project/neUpda/${projectID}/${id}`, task);
+
+
+        await axios.post(`http://localhost:2233/project/oneUpda/${projectID}/${id}`, task);
 
         data.assign_to.map(async (e) => {
-            
+            await axios.post(`http://localhost:2233/user/oneUpda/user/${e}`, task)
         })
 
 
-
+        const {dataa} = await axios.get(`http://localhost:2233/task/all/task/all/${projectID}`);
+        SetAllTask(dataa);
+        // console.log(dataa);
 
 
     } else {
@@ -66,6 +73,7 @@ const handleDeleteTask = async (id) => {
 useEffect(async() => {
     const {data} = await axios.get(`http://localhost:2233/task/all/task/all/${projectID}`);
      SetAllTask(data);
+     handleShowAllTask(projectID)
 }, [AllTask])
     return (
         <div>
@@ -156,13 +164,13 @@ useEffect(async() => {
                                                 </div>
                                             </div>
                                             
-                                            
+                                            <button onClick = {() => handleTaskUpdateOne(e._id)} type="button" className="btn btn-primary">Update</button>
                                             
                                         </form>
                                     </div>
                                     <div className="modal-footer">
                                         <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                        <button onClick = {() => handleTaskUpdateOne(e._id)} type="button" className="btn btn-primary">Update</button>
+                                       
                                     </div>
                                     </div>
                                 </div>

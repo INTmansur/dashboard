@@ -1,9 +1,55 @@
 
 import {useState, useEffect} from "react";
 import axios from "axios";
-
+import Pagination from '@mui/material/Pagination';
+import {useFormik} from "formik";
+import * as Yup from 'yup';
 
 const User = () => {
+
+    const formik = useFormik({
+        initialValues : { 
+            name : "",
+            email : "",
+            dateOfBirth : "",
+            sex : "",
+            bloodGroup : "",
+            contactNumber : "",
+            emergencyContactNumber : "",
+            presentAddress : "",
+            hobbies : "",
+            panNumber : "",
+            adharNumber : "",
+            motherTongue : "",
+            fatherName : "",
+            motherName : ""
+        },
+        validationSchema : Yup.object({
+            name : Yup.string().max(15, "Must be 15 characters or less").required("required"),
+            email : Yup.String().email("Invalid email address").required("Required"),
+            dateOfBirth : Yup.String().required("Required"),
+            sex : Yup.String().required("Required"),
+            bloodGroup : Yup.String().required("Required"),
+            contactNumber : Yup.Number().min(10, "Must be 10 numbers").required("Required"),
+            emergencyContactNumber : Yup.Number().min(10, "Must be 10 numbers").required("Required"),
+            presentAddress : Yup.String().required("Required"),
+            hobbies : Yup.String().required("Required"),
+            panNumber: Yup.String().min(8, "Min 8 Characters").required("Required"),
+            adharNumber : Yup.Number().min(12, "Min 12 Number").required("Required"),
+            motherTongue : Yup.String().required("Required"),
+            fatherName : Yup.String().max(30, "Maximum 30 characters").required("Required"),
+            motherName : Yup.String().max(30, "Maxmum 30 characters Required").required("Required")
+        }),
+        onSubmit : async (values) => {
+            console.log("this is the name of the file adn the other thing is nothing");
+        }
+    })
+
+
+
+
+
+
 
 
     const initState = {
@@ -26,6 +72,14 @@ const User = () => {
     const [createUser, setCreateUser] = useState(initState);
     const [allUser, setAllUser] = useState([]);
     const [oneUser, setOneUser] = useState({})
+    
+    const [page, setPage] = useState(1);
+    const [totalPage, setTotalPage] = useState(1);
+
+    const handlePageChange = (event, value) => {
+        setPage(value);
+        console.log(value);
+    }
    
 
     const handleChangeUser =  (e) => {
@@ -36,16 +90,34 @@ const User = () => {
 
 
     const handleCreateUserBtn = async () => {
-        await axios.post("http://localhost:2233/user/create/user", createUser);
-     const {data} = await axios.get("http://localhost:2233/user/all/user");
-    setAllUser(data);
+        if(createUser.name === "" || createUser.email === ""|| createUser.dateOfBirth === ""|| createUser.bloodGroup === "" || createUser.contactNumber === "" || createUser.emergencyContactNumber === "" || createUser.presentAddress === "" || createUser.hobbies === "" || createUser.panNumber === "" || createUser.adharNumber === "" || createUser.motherTongue === "" || createUser.fatherName === "" || createUser.motherName === "") {
+
+        } else {
+            console.log("this is the name of the file")
+            await axios.post("http://localhost:2233/user/create/user", createUser);
+            const {data} = await axios.get(`http://localhost:2233/user/allUser/user?page=${page}&size=5`);
+           setAllUser(data.user);
+           setTotalPage(data.totalPage);
+        }
+        
+       
+      
+       
+       
+  
+        
+   
+
+  
+       
     }
 
     // console.log(allUser);
 
     const getAllUser = async () => {
-        const {data} = await axios.get("http://localhost:2233/user/all/user");
-         setAllUser(data);
+        const {data} = await axios.get(`http://localhost:2233/user/allUser/user?page=${page}&size=5`);
+        setAllUser(data.user);
+        setTotalPage(data.totalPage);
     }
 
  
@@ -59,14 +131,23 @@ const User = () => {
     const handleUpdateUserOneChange = (e) => {
         const {name, value} = e.target;
         setOneUser({...oneUser, [name] : value});
+
     }
+    // console.log(oneUser.name);
 
     const handleUserUpdateOne = async (id) => {
-        await axios.patch(`http://localhost:2233/user/oneUpdate/user/${id}`, oneUser);
-         getAllUser();
+       
+        if(oneUser.name !== "" && oneUser.email !== "" && oneUser.dateOfBirth !== "" && oneUser.contactNumber !== "" && oneUser.emergencyContactNumber !== "" && oneUser.presentAddress !== "" && oneUser.panNumber !== "" && oneUser.adharNumber !== "" && oneUser.fatherName !== "" && oneUser.motherName !== "") {
+            delete oneUser._id;
+            await axios.patch(`http://localhost:2233/user/oneUpdate/user/${id}`, oneUser);
+            getAllUser();
 
-        const {data} = await axios.get("http://localhost:2233/user/all/user");
-        setAllUser(data);
+            const {data} = await axios.get(`http://localhost:2233/user/allUser/user?page=${page}&size=5`);
+            setAllUser(data.user);
+            setTotalPage(data.totalPage);
+        }
+
+        
     }
 
    
@@ -76,24 +157,90 @@ const User = () => {
 
         if(z === true) {
             await axios.delete(`http://localhost:2233/user/ondelete/user/${id}`);
-            
+            const {data} = await axios.get(`http://localhost:2233/user/allUser/user?page=${page}&size=5`);
+            setAllUser(data.user);
+            setTotalPage(data.totalPage);
         } else {
-            const {data} = await axios.get("http://localhost:2233/user/all/user");
-            setAllUser(data);
+            const {data} = await axios.get(`http://localhost:2233/user/allUser/user?page=${page}&size=5`);
+            setAllUser(data.user);
+            setTotalPage(data.totalPage);
         }
         
     }
 
+    const handleUserSortingASC = async (e) => {
+        
+        if(e === "general") {
+            const {data} = await axios.get(`http://localhost:2233/user/allUser/user?page=${page}&size=5`);
+            setAllUser(data.user);
+            setTotalPage(data.totalPage);
+        } else if (e === "ascending") {
+            const {data} = await axios.get(`http://localhost:2233/user/all/user/user/user?page=${page}&size=5`);
+            setAllUser(data.user);
+            setTotalPage(data.totalPage);
+        } else if (e === "descending") {
+            const {data} = await axios.get(`http://localhost:2233/user/all/user/user/desc?page=${page}&size=5`);
+            setAllUser(data.user);
+            setTotalPage(data.totalPage);
+        }
+        
+
+    }
+
+
+    const [Name, setName] = useState("");
+
+    const handleNameSearch = async (name) => {
+
+        if(name === "") {
+            const {data} = await axios.get(`http://localhost:2233/user/allUser/user?page=${page}&size=5`);
+            setAllUser(data.user);
+            setTotalPage(data.totalPage);
+        } else {
+            const {data} = await axios.get(`http://localhost:2233/user/all/user/user/name/${name}`)
+         setAllUser(data);
+        }
+        
+
+    }
+
+
     useEffect(() => {
         getAllUser();
-    }, [allUser])
+    }, [page])
 
     return (
         <div className = "container-fluid">
+
+
+
+
+
+
             <div className = "row">
                 <div className="row">
-                    <div className="col-11"></div>
-                    <div className="col-1">
+                    <div className="col-5"></div>
+                    <div className = "col-3">
+                        <label className = "form-label">Search by Name</label>
+                        <input onChange = {(e) => {
+                            setName(e.target.value);
+                            handleNameSearch(e.target.value);
+                        }} value = {Name} type = "text" name = "name" className = "form-control" placeholder = "enter the name" />
+                    </div>
+                    <div className = "col-2">
+                        <div>
+                            <label>Sort by User Name</label>
+                            <select onChange = {(e) => {
+                                handleUserSortingASC(e.target.value)
+                            }}>
+                                <option selected disabled>Select any option</option>
+                                <option value = "general">General</option>
+                                <option  value = "ascending">Ascending</option>
+                                <option value = "descending">Descending</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div className="col-2">
                     <button type="button" className="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">
                          Create User
                     </button>
@@ -115,36 +262,52 @@ const User = () => {
                         <div className="modal-body">
 
 
+                {/* this part is used for the formik thing  */}
 
 
-                            {/* modal body */}
-                             <form onSubmit = {(e) => e.preventDefault()} className="row g-3 needs-validation" novalidate>
+
+
+                <form onSubmit = {formik.handleSubmit} className="row g-3 needs-validation" novalidate>
                                 <div className="col-md-11">
-                                    <label for="validationCustom01" className="form-label">Name</label>
-                                    <input onChange = {(e) => {
-                                        handleChangeUser(e)
-                                    }} type="text" name = "name" className="form-control" id="validationCustom01" value={createUser.name} required />
-                                    <div className="valid-feedback">
-                                    Looks good!
-                                    </div>
+                                    <label for="validationCustom01" htmlFor = "name" className="form-label">Name</label>
+                                    <input onChange = {formik.handleChange} onBlur = {formik.handleBlur} type="text" name = "name" className= "form-control" id="validationCustom01 name" value={formik.values.name} required />
+                                    {formik.touched.name && formik.errors.name ? (
+                                        <div>{formik.errors.name}</div>
+                                    ) : null}
                                 </div>
                                 <div className="col-md-11">
                                     <label for="validationCustom02" className="form-label">Email </label>
                                     <input  onChange = {(e) => {
                                         handleChangeUser(e)
-                                    }} type = "email" name = "email" className="form-control" id="validationCustom02" value={createUser.email} required />
-                                    <div className="valid-feedback">
-                                    Looks good!
-                                    </div>
+                                    }} type = "email" name = "email" className={(createUser.email === "" ? ("form-control is-invalid") : ("form-control is-valid"))}                                    id="validationCustom02" value={createUser.email} required />
+                                     {
+                                        createUser.email === "" ? (
+                                            <div className = "invalid-feedback">
+                                            Email is required
+                                            </div>
+                                        ) : (
+                                            <div className="valid-feedback">
+                                                 Looks good!
+                                            </div>
+                                        )
+                                    }
                                 </div>
                                 <div className="col-md-11">
                                     <label for="validationCustom02" className="form-label">Date of Birth </label>
                                     <input  type = "date"  onChange = {(e) => {
                                         handleChangeUser(e)
-                                    }} name = "dateOfBirth" className="form-control" id="validationCustom02" value={createUser.dateOfBirth} required />
-                                    <div className="valid-feedback">
-                                    Looks good!
-                                    </div>
+                                    }} name = "dateOfBirth" className={(createUser.dateOfBirth === "" ? ("form-control is-invalid") : ("form-control is-valid"))} id="validationCustom02" value={createUser.dateOfBirth} required />
+                                     {
+                                        createUser.dateOfBirth === "" ? (
+                                            <div className = "invalid-feedback">
+                                        date of birth is required
+                                            </div>
+                                        ) : (
+                                            <div className="valid-feedback">
+                                                 Looks good!
+                                            </div>
+                                        )
+                                    }
                                 </div>
                                 <div className="col-md-11">
                                     <label for="validationCustom02" className="form-label">Sex </label>
@@ -166,29 +329,53 @@ const User = () => {
                                     <label for="validationCustom02" className="form-label"> Contact Number </label>
                                     <input type = "number"  onChange = {(e) => {
                                         handleChangeUser(e)
-                                    }} name = "contactNumber" className="form-control" id="validationCustom02" value={createUser.contactNumber} />
-                                    <div className="valid-feedback">
-                                    Looks good!
-                                    </div>
+                                    }} name = "contactNumber" className={(createUser.contactNumber === "" ? ("form-control is-invalid") : ("form-control is-valid"))}id="validationCustom02" value={createUser.contactNumber} />
+                                    {
+                                        createUser.contactNumber === "" ? (
+                                            <div className = "invalid-feedback">
+                                            Contact Number  is required
+                                            </div>
+                                        ) : (
+                                            <div className="valid-feedback">
+                                                 Looks good!
+                                            </div>
+                                        )
+                                    }
                                 </div>
                                 
                                 <div className="col-md-11">
                                     <label for="validationCustom02" className="form-label">Emergency Contact Number </label>
                                     <input  onChange = {(e) => {
                                         handleChangeUser(e)
-                                    }} type = "number" name = "emergencyContactNumber" className="form-control" id="validationCustom02" value={createUser.EmergencyContactNumber} />
-                                    <div className="valid-feedback">
-                                    Looks good!
-                                    </div>
+                                    }} type = "number" name = "emergencyContactNumber" className={(createUser.emergencyContactNumber === "" ? ("form-control is-invalid") : ("form-control is-valid"))}id="validationCustom02" value={createUser.EmergencyContactNumber} />
+                                     {
+                                        createUser.emergencyContactNumber === "" ? (
+                                            <div className = "invalid-feedback">
+                                            Emergency Contact Number is required
+                                            </div>
+                                        ) : (
+                                            <div className="valid-feedback">
+                                                 Looks good!
+                                            </div>
+                                        )
+                                    }
                                 </div>
                                 <div className="col-md-11">
                                     <label for="validationCustom02" className="form-label">Present Address </label>
                                     <input type = "text"  onChange = {(e) => {
                                         handleChangeUser(e)
-                                    }} name = "presentAddress" className="form-control" id="validationCustom02" value={createUser.presentAddress} />
-                                    <div className="valid-feedback">
-                                    Looks good!
-                                    </div>
+                                    }} name = "presentAddress" className={(createUser.presentAddress === "" ? ("form-control is-invalid") : ("form-control is-valid"))} id="validationCustom02" value={createUser.presentAddress} />
+                                    {
+                                        createUser.presentAddress === "" ? (
+                                            <div className = "invalid-feedback">
+                                            Present address is required
+                                            </div>
+                                        ) : (
+                                            <div className="valid-feedback">
+                                                 Looks good!
+                                            </div>
+                                        )
+                                    }
                                 </div>
 
                                 <div className="col-md-11">
@@ -204,20 +391,36 @@ const User = () => {
                                     <label for="validationCustom02" className="form-label">Pan number </label>
                                     <input type = "text"  onChange = {(e) => {
                                         handleChangeUser(e)
-                                    }} name = "panNumber" className="form-control" id="validationCustom02" value={createUser.panNumber} />
-                                    <div className="valid-feedback">
-                                    Looks good!
-                                    </div>
+                                    }} name = "panNumber" className={(createUser.panNumber === "" ? ("form-control is-invalid") : ("form-control is-valid"))} id="validationCustom02" value={createUser.panNumber} />
+                                   {
+                                        createUser.panNumber === "" ? (
+                                            <div className = "invalid-feedback">
+                                            Pan is required
+                                            </div>
+                                        ) : (
+                                            <div className="valid-feedback">
+                                                 Looks good!
+                                            </div>
+                                        )
+                                    }
                                 </div>
 
                                 <div className="col-md-11">
                                     <label for="validationCustom02" className="form-label">Adhar Number </label>
                                     <input  onChange = {(e) => {
                                         handleChangeUser(e)
-                                    }}  type = "number" name = "adharNumber" className="form-control" id="validationCustom02" value={createUser.adharNumber} />
-                                    <div className="valid-feedback">
-                                    Looks good!
-                                    </div>
+                                    }}  type = "number" name = "adharNumber" className={(createUser.adharNumber === "" ? ("form-control is-invalid") : ("form-control is-valid"))} id="validationCustom02" value={createUser.adharNumber} />
+                                    
+                                   { createUser.adharNumber === "" ? (
+                                            <div className = "invalid-feedback">
+                                            Addhar Number is required
+                                            </div>
+                                        ) : (
+                                            <div className="valid-feedback">
+                                                 Looks good!
+                                            </div>
+                                        )
+                                    }
                                 </div>
 
                                 <div className="col-md-11">
@@ -241,27 +444,303 @@ const User = () => {
                                     <label for="validationCustom02" className="form-label">Father name </label>
                                     <input type = "text"  onChange = {(e) => {
                                         handleChangeUser(e)
-                                    }} name = "fatherName" className="form-control" id="validationCustom02" value={createUser.fatherName} />
-                                    <div className="valid-feedback">
-                                    Looks good!
-                                    </div>
+                                    }} name = "fatherName" className={(createUser.fatherName === "" ? ("form-control is-invalid") : ("form-control is-valid"))} id="validationCustom02" value={createUser.fatherName} />
+                                   {
+                                        createUser.fatherName === "" ? (
+                                            <div className = "invalid-feedback">
+                                            Father Name is required
+                                            </div>
+                                        ) : (
+                                            <div className="valid-feedback">
+                                                 Looks good!
+                                            </div>
+                                        )
+                                    }
                                 </div>
                                 <div className="col-md-11">
                                     <label for="validationCustom02" className="form-label">Mother name </label>
                                     <input  onChange = {(e) => {
                                         handleChangeUser(e)
-                                    }} type = "text" name = "motherName" className="form-control" id="validationCustom02" value={createUser.motherName} />
+                                    }} type = "text" name = "motherName" className={(createUser.motherName === "" ? ("form-control is-invalid") : ("form-control is-valid"))} id="validationCustom02" value={createUser.motherName} />
+                                    {
+                                        createUser.motherName === "" ? (
+                                            <div className = "invalid-feedback">
+                                            Mothername is required
+                                            </div>
+                                        ) : (
+                                            <div className="valid-feedback">
+                                                 Looks good!
+                                            </div>
+                                        )
+                                    }
+                                </div>
+                                <button onClick = {handleCreateUserBtn} type="submit" class="btn btn-primary">Submit</button>
+                                
+                            </form>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                            {/* //this part use for the simple bootstrap  */}
+
+                            {/* modal body */}
+                             {/* <form onSubmit = {(e) => e.preventDefault()} className="row g-3 needs-validation" novalidate>
+                                <div className="col-md-11">
+                                    <label for="validationCustom01" className="form-label">Name</label>
+                                    <input onChange = {(e) => {
+                                        handleChangeUser(e)
+                                    }} type="text" name = "name" className={(createUser.name === "" ? ("form-control is-invalid") : ("form-control is-valid"))} id="validationCustom01" value={createUser.name} required />
+                                     {
+                                        createUser.name === "" ? (
+                                            <div className = "invalid-feedback">
+                                            Full name is required
+                                            </div>
+                                        ) : (
+                                            <div className="valid-feedback">
+                                                 Looks good!
+                                            </div>
+                                        )
+                                    }
+                                </div>
+                                <div className="col-md-11">
+                                    <label for="validationCustom02" className="form-label">Email </label>
+                                    <input  onChange = {(e) => {
+                                        handleChangeUser(e)
+                                    }} type = "email" name = "email" className={(createUser.email === "" ? ("form-control is-invalid") : ("form-control is-valid"))}                                    id="validationCustom02" value={createUser.email} required />
+                                     {
+                                        createUser.email === "" ? (
+                                            <div className = "invalid-feedback">
+                                            Email is required
+                                            </div>
+                                        ) : (
+                                            <div className="valid-feedback">
+                                                 Looks good!
+                                            </div>
+                                        )
+                                    }
+                                </div>
+                                <div className="col-md-11">
+                                    <label for="validationCustom02" className="form-label">Date of Birth </label>
+                                    <input  type = "date"  onChange = {(e) => {
+                                        handleChangeUser(e)
+                                    }} name = "dateOfBirth" className={(createUser.dateOfBirth === "" ? ("form-control is-invalid") : ("form-control is-valid"))} id="validationCustom02" value={createUser.dateOfBirth} required />
+                                     {
+                                        createUser.dateOfBirth === "" ? (
+                                            <div className = "invalid-feedback">
+                                        date of birth is required
+                                            </div>
+                                        ) : (
+                                            <div className="valid-feedback">
+                                                 Looks good!
+                                            </div>
+                                        )
+                                    }
+                                </div>
+                                <div className="col-md-11">
+                                    <label for="validationCustom02" className="form-label">Sex </label>
+                                    <select name = "sex" onChange = {(e) => handleChangeUser(e)} className = "form-control">
+                                        <option value = "Male">Male</option>
+                                        <option value = "Female">Female</option>
+                                    </select>
+                                </div>
+                                <div className="col-md-11">
+                                    <label for="validationCustom02" className="form-label">Blood Group </label>
+                                    <input type = "text"  onChange = {(e) => {
+                                        handleChangeUser(e)
+                                    }} name = "bloodGroup" className="form-control" id="validationCustom02" value={createUser.bloodGroup} />
+                                    <div className="valid-feedback">
+                                    Looks good!
+                                    </div>
+                                </div>
+                                <div className="col-md-11">
+                                    <label for="validationCustom02" className="form-label"> Contact Number </label>
+                                    <input type = "number"  onChange = {(e) => {
+                                        handleChangeUser(e)
+                                    }} name = "contactNumber" className={(createUser.contactNumber === "" ? ("form-control is-invalid") : ("form-control is-valid"))}id="validationCustom02" value={createUser.contactNumber} />
+                                    {
+                                        createUser.contactNumber === "" ? (
+                                            <div className = "invalid-feedback">
+                                            Contact Number  is required
+                                            </div>
+                                        ) : (
+                                            <div className="valid-feedback">
+                                                 Looks good!
+                                            </div>
+                                        )
+                                    }
+                                </div>
+                                
+                                <div className="col-md-11">
+                                    <label for="validationCustom02" className="form-label">Emergency Contact Number </label>
+                                    <input  onChange = {(e) => {
+                                        handleChangeUser(e)
+                                    }} type = "number" name = "emergencyContactNumber" className={(createUser.emergencyContactNumber === "" ? ("form-control is-invalid") : ("form-control is-valid"))}id="validationCustom02" value={createUser.EmergencyContactNumber} />
+                                     {
+                                        createUser.emergencyContactNumber === "" ? (
+                                            <div className = "invalid-feedback">
+                                            Emergency Contact Number is required
+                                            </div>
+                                        ) : (
+                                            <div className="valid-feedback">
+                                                 Looks good!
+                                            </div>
+                                        )
+                                    }
+                                </div>
+                                <div className="col-md-11">
+                                    <label for="validationCustom02" className="form-label">Present Address </label>
+                                    <input type = "text"  onChange = {(e) => {
+                                        handleChangeUser(e)
+                                    }} name = "presentAddress" className={(createUser.presentAddress === "" ? ("form-control is-invalid") : ("form-control is-valid"))} id="validationCustom02" value={createUser.presentAddress} />
+                                    {
+                                        createUser.presentAddress === "" ? (
+                                            <div className = "invalid-feedback">
+                                            Present address is required
+                                            </div>
+                                        ) : (
+                                            <div className="valid-feedback">
+                                                 Looks good!
+                                            </div>
+                                        )
+                                    }
+                                </div>
+
+                                <div className="col-md-11">
+                                    <label for="validationCustom02" className="form-label">Hobbies </label>
+                                    <textarea  onChange = {(e) => {
+                                        handleChangeUser(e)
+                                    }} name = "hobbies" className="form-control" id="validationCustom02" value={createUser.hobbies} ></textarea>
+                                    <div className="valid-feedback">
+                                    Looks good!
+                                    </div>
+                                </div>
+                                <div className="col-md-11">
+                                    <label for="validationCustom02" className="form-label">Pan number </label>
+                                    <input type = "text"  onChange = {(e) => {
+                                        handleChangeUser(e)
+                                    }} name = "panNumber" className={(createUser.panNumber === "" ? ("form-control is-invalid") : ("form-control is-valid"))} id="validationCustom02" value={createUser.panNumber} />
+                                   {
+                                        createUser.panNumber === "" ? (
+                                            <div className = "invalid-feedback">
+                                            Pan is required
+                                            </div>
+                                        ) : (
+                                            <div className="valid-feedback">
+                                                 Looks good!
+                                            </div>
+                                        )
+                                    }
+                                </div>
+
+                                <div className="col-md-11">
+                                    <label for="validationCustom02" className="form-label">Adhar Number </label>
+                                    <input  onChange = {(e) => {
+                                        handleChangeUser(e)
+                                    }}  type = "number" name = "adharNumber" className={(createUser.adharNumber === "" ? ("form-control is-invalid") : ("form-control is-valid"))} id="validationCustom02" value={createUser.adharNumber} />
+                                    
+                                   { createUser.adharNumber === "" ? (
+                                            <div className = "invalid-feedback">
+                                            Addhar Number is required
+                                            </div>
+                                        ) : (
+                                            <div className="valid-feedback">
+                                                 Looks good!
+                                            </div>
+                                        )
+                                    }
+                                </div>
+
+                                <div className="col-md-11">
+                                    <label for="validationCustom02" className="form-label">Mother Tongue </label>
+                                    <input type = "text"  onChange = {(e) => {
+                                        handleChangeUser(e)
+                                    }} name = "motherTongue" className="form-control" id="validationCustom02" value={createUser.motherTongue} />
                                     <div className="valid-feedback">
                                     Looks good!
                                     </div>
                                 </div>
 
+                                <div className="col-md-11">
+                                    <label for="validationCustom02" className="form-label">Marital Status </label>
+                                    <select name = "maritialStatus" onChange = {(e) => handleChangeUser(e)} className = "form-control">
+                                        <option value = "Married">Married</option>
+                                        <option value = "Unmarried">Unmarried</option>
+                                    </select>
+                                </div>
+                                <div className="col-md-11">
+                                    <label for="validationCustom02" className="form-label">Father name </label>
+                                    <input type = "text"  onChange = {(e) => {
+                                        handleChangeUser(e)
+                                    }} name = "fatherName" className={(createUser.fatherName === "" ? ("form-control is-invalid") : ("form-control is-valid"))} id="validationCustom02" value={createUser.fatherName} />
+                                   {
+                                        createUser.fatherName === "" ? (
+                                            <div className = "invalid-feedback">
+                                            Father Name is required
+                                            </div>
+                                        ) : (
+                                            <div className="valid-feedback">
+                                                 Looks good!
+                                            </div>
+                                        )
+                                    }
+                                </div>
+                                <div className="col-md-11">
+                                    <label for="validationCustom02" className="form-label">Mother name </label>
+                                    <input  onChange = {(e) => {
+                                        handleChangeUser(e)
+                                    }} type = "text" name = "motherName" className={(createUser.motherName === "" ? ("form-control is-invalid") : ("form-control is-valid"))} id="validationCustom02" value={createUser.motherName} />
+                                    {
+                                        createUser.motherName === "" ? (
+                                            <div className = "invalid-feedback">
+                                            Mothername is required
+                                            </div>
+                                        ) : (
+                                            <div className="valid-feedback">
+                                                 Looks good!
+                                            </div>
+                                        )
+                                    }
+                                </div>
+                                <button onClick = {handleCreateUserBtn} type="submit" class="btn btn-primary">Submit</button>
                                 
-                            </form>
+                            </form> */}
                         </div>
                         <div className="modal-footer">
                             <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button onClick = {handleCreateUserBtn} type="button" className="btn btn-primary">Create</button>
+                            {/* <button onClick = {handleCreateUserBtn} type="button" className="btn btn-primary">Create</button> */}
                         </div>
                         </div>
                     </div>
@@ -316,7 +795,7 @@ const User = () => {
                     <div className="modal-dialog">
                         <div className="modal-content">
                         <div className="modal-header">
-                            <h5 className="modal-title" id="exampleModalLabel">Update Project</h5>
+                            <h5 className="modal-title" id="exampleModalLabel">Update User</h5>
                             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div className="modal-body">
@@ -336,31 +815,59 @@ const User = () => {
                                     </div>
                                 </div> */}
                                 <div className="col-md-11">
-                                    <label for="validationCustom01" className="form-label">Name</label>
+                                    <label for="validationCustom0133" className="form-label">Name</label>
                                     <input onChange = {(b) => {
                                         handleUpdateUserOneChange(b)
-                                    }} type="text" name = "name" className="form-control" id="validationCustom01" value={oneUser.name} required />
-                                    <div className="valid-feedback">
+                                    }} type="text" name = "name" className={(oneUser.name === "" ? ("form-control is-invalid") : ("form-control is-valid"))} id="validationCustom0133" value={oneUser.name} required />
+                                   
+                                   
+                                    {
+                                        oneUser.name === "" ? (
+                                            <div className = "invalid-feedback">
+                                                Name filled  is required
+                                            </div>
+                                        ) : (
+                                            <div className="valid-feedback">
                                     Looks good!
                                     </div>
+                                        )
+                                    }
+                                    
+                                    
                                 </div>
                                 <div className="col-md-11">
                                     <label for="validationCustom02" className="form-label">Email </label>
                                     <input  onChange = {(b) => {
                                         handleUpdateUserOneChange(b)
-                                    }} type = "email" name = "email" className="form-control" id="validationCustom02" value={oneUser.email} required />
-                                    <div className="valid-feedback">
-                                    Looks good!
-                                    </div>
+                                    }} type = "email" name = "email" className = {(oneUser.email === "" ? ("form-control is-invalid") : ("form-control is-valid"))} id="validationCustom02" value={oneUser.email} required />
+                                    {
+                                        oneUser.email === "" ? (
+                                            <div className = "invalid-feedback">
+                                                Email filled is required
+                                            </div>
+                                        ) : (
+                                            <div className="valid-feedback">
+                                                 Looks good!
+                                            </div>
+                                        )
+                                    }
                                 </div>
                                 <div className="col-md-11">
                                     <label for="validationCustom03" className="form-label">Date of Birth </label>
                                     <input  type = "date"  onChange = {(b) => {
                                         handleUpdateUserOneChange(b)
-                                    }} name = "dateOfBirth" className="form-control" id="validationCustom03" value={oneUser.dateOfBirth} required />
-                                    <div className="valid-feedback">
-                                    Looks good!
-                                    </div>
+                                    }} name = "dateOfBirth" className={(oneUser.dateOfBirth === "" ? ("form-control is-invalid") : ("form-control is-valid"))} id="validationCustom03" value={oneUser.dateOfBirth} required />
+                                   {
+                                        oneUser.dateOfBirth === "" ? (
+                                            <div className = "invalid-feedback">
+                                                D.O.B  is required
+                                            </div>
+                                        ) : (
+                                            <div className="valid-feedback">
+                                                 Looks good!
+                                            </div>
+                                        )
+                                    }
                                 </div>
                                 <div className="col-md-11">
                                     <label for="validationCustom04" className="form-label">Sex </label>
@@ -382,29 +889,53 @@ const User = () => {
                                     <label for="validationCustom06" className="form-label"> Contact Number </label>
                                     <input type = "number"  onChange = {(d) => {
                                         handleUpdateUserOneChange(d)
-                                    }} name = "contactNumber" className="form-control" id="validationCustom06" value={oneUser.contactNumber} />
-                                    <div className="valid-feedback">
-                                    Looks good!
-                                    </div>
+                                    }} name = "contactNumber" className={(oneUser.contactNumber === "" ? ("form-control is-invalid") : ("form-control is-valid"))} id="validationCustom06" value={oneUser.contactNumber} required/>
+                                     {
+                                        oneUser.contactNumber === "" ? (
+                                            <div className = "invalid-feedback">
+                                               Contact Number  is required
+                                            </div>
+                                        ) : (
+                                            <div className="valid-feedback">
+                                                 Looks good!
+                                            </div>
+                                        )
+                                    }
                                 </div>
                                 
                                 <div className="col-md-11">
                                     <label for="validationCustom07" className="form-label">Emergency Contact Number </label>
                                     <input  onChange = {(d) => {
                                         handleUpdateUserOneChange(d)
-                                    }} type = "number" name = "emergencyContactNumber" className="form-control" id="validationCustom02" value={oneUser.EmergencyContactNumber} />
-                                    <div className="valid-feedback">
-                                    Looks good!
-                                    </div>
+                                    }} type = "number" name = "emergencyContactNumber" className={(oneUser.emergencyContactNumber === "" ? ("form-control is-invalid") : ("form-control is-valid"))} id="validationCustom02" value={oneUser.EmergencyContactNumber} required/>
+                                    {
+                                        oneUser.emergencyContactNumber === "" ? (
+                                            <div className = "invalid-feedback">
+                                             Emergency   Contact Number  is required
+                                            </div>
+                                        ) : (
+                                            <div className="valid-feedback">
+                                                 Looks good!
+                                            </div>
+                                        )
+                                    }
                                 </div>
                                 <div className="col-md-11">
                                     <label for="validationCustom08" className="form-label">Present Address </label>
                                     <input type = "text"  onChange = {(d) => {
                                         handleUpdateUserOneChange(d)
-                                    }} name = "presentAddress" className="form-control" id="validationCustom08" value={oneUser.presentAddress} />
-                                    <div className="valid-feedback">
-                                    Looks good!
-                                    </div>
+                                    }} name = "presentAddress" className={(oneUser.presentAddress === "" ? ("form-control is-invalid") : ("form-control is-valid"))} id="validationCustom08" value={oneUser.presentAddress} required/>
+                                    {
+                                        oneUser.presentAddress === "" ? (
+                                            <div className = "invalid-feedback">
+                                            Address is required
+                                            </div>
+                                        ) : (
+                                            <div className="valid-feedback">
+                                                 Looks good!
+                                            </div>
+                                        )
+                                    }
                                 </div>
 
                                 <div className="col-md-11">
@@ -420,27 +951,43 @@ const User = () => {
                                     <label for="validationCustom10" className="form-label">Pan number </label>
                                     <input type = "text"  onChange = {(d) => {
                                         handleUpdateUserOneChange(d)
-                                    }} name = "panNumber" className="form-control" id="validationCustom10" value={oneUser.panNumber} />
-                                    <div className="valid-feedback">
-                                    Looks good!
-                                    </div>
+                                    }} name = "panNumber" className={(oneUser.panNumber === "" ? ("form-control is-invalid") : ("form-control is-valid"))}  id="validationCustom10" value={oneUser.panNumber} required/>
+                                       {
+                                        oneUser.panNumber === "" ? (
+                                            <div className = "invalid-feedback">
+                                            Pan is required
+                                            </div>
+                                        ) : (
+                                            <div className="valid-feedback">
+                                                 Looks good!
+                                            </div>
+                                        )
+                                    }
                                 </div>
 
                                 <div className="col-md-11">
                                     <label for="validationCustom11" className="form-label">Adhar Number </label>
                                     <input  onChange = {(d) => {
                                         handleUpdateUserOneChange(d)
-                                    }}  type = "number" name = "adharNumber" className="form-control" id="validationCustom11" value={oneUser.adharNumber} />
-                                    <div className="valid-feedback">
-                                    Looks good!
-                                    </div>
+                                    }}  type = "number" name = "adharNumber" className={(oneUser.adharNumber === "" ? ("form-control is-invalid") : ("form-control is-valid"))}   id="validationCustom11" value={oneUser.adharNumber} required/>
+                                   {
+                                        oneUser.adharNumber === "" ? (
+                                            <div className = "invalid-feedback">
+                                            Adhar is required
+                                            </div>
+                                        ) : (
+                                            <div className="valid-feedback">
+                                                 Looks good!
+                                            </div>
+                                        )
+                                    }
                                 </div>
 
                                 <div className="col-md-11">
                                     <label for="validationCustom12" className="form-label">Mother Tongue </label>
                                     <input type = "text"  onChange = {(d) => {
                                         handleUpdateUserOneChange(d)
-                                    }} name = "motherTongue" className="form-control" id="validationCustom12" value={oneUser.motherTongue} />
+                                    }} name = "motherTongue" className="form-control" id="validationCustom12" value={oneUser.motherTongue} required/>
                                     <div className="valid-feedback">
                                     Looks good!
                                     </div>
@@ -457,27 +1004,43 @@ const User = () => {
                                     <label for="validationCustom14" className="form-label">Father name </label>
                                     <input type = "text"  onChange = {(d) => {
                                         handleUpdateUserOneChange(d)
-                                    }} name = "fatherName" className="form-control" id="validationCustom14" value={oneUser.fatherName} />
-                                    <div className="valid-feedback">
-                                    Looks good!
-                                    </div>
+                                    }} name = "fatherName" className={(oneUser.fatherName === "" ? ("form-control is-invalid") : ("form-control is-valid"))}  id="validationCustom14" value={oneUser.fatherName} required/>
+                                     {
+                                        oneUser.fatherName === "" ? (
+                                            <div className = "invalid-feedback">
+                                            Adhar is required
+                                            </div>
+                                        ) : (
+                                            <div className="valid-feedback">
+                                                 Looks good!
+                                            </div>
+                                        )
+                                    }
                                 </div>
                                 <div className="col-md-11">
                                     <label for="validationCustom15" className="form-label">Mother name </label>
                                     <input  onChange = {(d) => {
                                         handleUpdateUserOneChange(d)
-                                    }} type = "text" name = "motherName" className="form-control" id="validationCustom15" value={oneUser.motherName} />
-                                    <div className="valid-feedback">
-                                    Looks good!
-                                    </div>
+                                    }} type = "text" name = "motherName" className={(oneUser.motherName === "" ? ("form-control is-invalid") : ("form-control is-valid"))} id="validationCustom15" value={oneUser.motherName} required/>
+                                     {
+                                        oneUser.motherName === "" ? (
+                                            <div className = "invalid-feedback">
+                                            Adhar is required
+                                            </div>
+                                        ) : (
+                                            <div className="valid-feedback">
+                                                 Looks good!
+                                            </div>
+                                        )
+                                    }
                                 </div>
-                                
+                                <button onClick = {() => handleUserUpdateOne(e._id)} type="button" className="btn btn-primary">Update</button>
                                 
                             </form>
                         </div>
                         <div className="modal-footer">
                             <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button onClick = {() => handleUserUpdateOne(e._id)} type="button" className="btn btn-primary">Update</button>
+                            
                         </div>
                         </div>
                     </div>
@@ -618,7 +1181,20 @@ const User = () => {
 
 
 
-
+            
+            <div className = "row">
+                <div className = "col-8"></div>
+                <div className = "col-4">
+                    <nav aria-label="...">
+                        <ul className="pagination">
+                            
+                            <Pagination page = {page} onChange = {handlePageChange} count={totalPage} variant="outlined" />
+                            
+                            
+                        </ul>
+                    </nav>
+                </div>
+            </div>
 
 
         </div>

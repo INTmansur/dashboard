@@ -12,9 +12,17 @@ router.post("/create", async (req, res) => {
 })
 
 router.get("/all", async (req, res) => {
-    const project = await Project.find().lean().exec();
+    let size = +req.query.size;
+    let page = +req.query.page;
+    let offset = (page - 1) * size;
 
-    return res.status(200).send(project);
+    const project = await Project.find().skip(offset).limit(size).lean().exec();
+
+    const totalProject = await Project.find().countDocuments().lean().exec();
+    let totalPage =  Math.ceil(totalProject/ size);
+    console.log(totalPage)
+
+    return res.status(200).send({project, totalPage});
 })
 
 router.get("/one/:id", async (req, res) => {
