@@ -102,7 +102,7 @@ useEffect(async() => {
                                 <td>{e.status}</td>
                                 <td>
                          
-                         <i data-bs-toggle="modal" data-bs-target="#updateModal" onClick = {() => {
+                         <i data-bs-toggle="modal" data-bs-target="#updateModala" onClick = {() => {
                              handleUpdateTaskOne(e._id);
                          }} className='fas fa-edit'></i>
 
@@ -111,11 +111,11 @@ useEffect(async() => {
 
 
 
-                            <div className=" mt-5 t-5 modal fade" id="updateModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div className=" mt-5 t-5 modal fade" id="updateModala" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div className="modal-dialog">
                                     <div className="modal-content">
                                     <div className="modal-header">
-                                        <h5 className="modal-title" id="exampleModalLabel">Update Project</h5>
+                                        <h5 className="modal-title" id="exampleModalLabel">Update Task</h5>
                                         <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div className="modal-body">

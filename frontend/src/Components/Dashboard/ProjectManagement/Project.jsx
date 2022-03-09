@@ -2,7 +2,8 @@ import {useState, useEffect} from "react";
 import axios from "axios";
 
 import "./Project.css";
-
+import {Formik} from "formik";
+import * as Yup from "yup";
 
 //fontAwsome icon
 
@@ -240,6 +241,11 @@ const handleDeleteProject = async (id) => {
 }
 
 
+    const validationProjectSchema = Yup.object({
+        title : Yup.string().required("Required"),
+        description : Yup.string().required("Required")
+    })
+
     useEffect(() => {
         getAllProject();
         getAllUser();
@@ -285,32 +291,71 @@ const handleDeleteProject = async (id) => {
 
 
                             {/* modal body */}
-                             <form onSubmit = {(e) => e.preventDefault()} className="row g-3 needs-validation" novalidate>
-                                <div className="col-md-11">
-                                    <label for="validationCustom01" className="form-label">Title</label>
-                                    <input onChange = {(e) => {
-                                        handleChangeProject(e)
-                                    }} type="text" name = "title" className="form-control" id="validationCustom01" value={createProject.title} required />
-                                    <div className="valid-feedback">
-                                    Looks good!
-                                    </div>
-                                </div>
-                                <div className="col-md-11">
-                                    <label for="validationCustom02" className="form-label">Description </label>
-                                    <textarea  onChange = {(e) => {
-                                        handleChangeProject(e)
-                                    }} name = "description" className="form-control" id="validationCustom02" value={createProject.description} required></textarea>
-                                    <div className="valid-feedback">
-                                    Looks good!
-                                    </div>
-                                </div>
-                                
-                                
-                            </form>
+
+
+                            <Formik validationSchema = {validationProjectSchema}
+                                initialValues = {{
+                                    title : "",
+                                    description : "",
+                                }}
+                                enableReinitialize = {true}
+                                onSubmit = {(values, actions) => {
+                                    setTimeout(async() => {
+                                        
+                                        await axios.post("http://localhost:2233/project/create", values);
+                                        const {data} = await axios.get(`http://localhost:2233/project/all?page=${page}&size=5`);
+
+                                        setAllProject(data.project);
+                                        setTotalPages(data.totalPage)
+                                    }, 100)
+                                }}
+                            >
+                                {(props) => (
+                                    <form onSubmit = {props.handleSubmit} className = "row g-3 needs validation">
+
+                                                            <div className = "col-md-11" >
+                                                                <label for = "validationCustom" htmlFor = "title" className = "form-label">Title</label>
+                                                                <input onChange = {props.handleChange} onBlur = {props.handleBlur} type = "text" name = "title" className = "form-control" id = "validationCustom title" value = {props.values.title} required />
+                                                                {
+                                                                    props.touched.title && props.errors.title ? (
+                                                                        <div>{props.errors.title}</div>
+                                                                    ) : null
+                                                                }
+                                                            </div> 
+                                                            <div className = "col-md-11" >
+                                                                <label for = "validationCustom" htmlFor = "description" className = "form-label">Description</label>
+                                                                <textarea onChange = {props.handleChange} onBlur = {props.handleBlur} type = "text" name = "description" className = "form-control" id = "validationCustom description" value = {props.values.description} required ></textarea>
+                                                                {
+                                                                    props.touched.description && props.errors.description ? (
+                                                                        <div>{props.errors.description}</div>
+                                                                    ) : null
+                                                                }
+                                                            </div> 
+                                                            <button type = "submit" className = "btn btn-primary">Add Project</button>
+
+                                    </form>
+                                )}
+
+                            </Formik>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                         </div>
                         <div className="modal-footer">
                             <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button onClick = {handleCreateProjectBtn} type="button" className="btn btn-primary">Create</button>
+                            {/* <button onClick = {handleCreateProjectBtn} type="button" className="btn btn-primary">Create</button> */}
                         </div>
                         </div>
                     </div>
@@ -370,32 +415,59 @@ const handleDeleteProject = async (id) => {
 
 
                                                         {/* modal body */}
-                                                        <form onSubmit = {(a) => a.preventDefault()} className="row g-3 needs-validation" novalidate>
-                                                            <div className="col-md-11">
-                                                                <label for="validationCustom01" className="form-label">Title</label>
-                                                                <input onChange = {(b) => {
-                                                                    handleUpdateProjectOneChange(b)
-                                                                }} type="text" name = "title" className="form-control" id="validationCustom01" value={oneProject.title} required />
-                                                                <div className="valid-feedback">
-                                                                Looks good!
-                                                                </div>
-                                                            </div>
-                                                            <div className="col-md-11">
-                                                                <label for="validationCustom02" className="form-label">Description </label>
-                                                                <textarea  onChange = {(b) => {
-                                                                    handleUpdateProjectOneChange(b)
-                                                                }} name = "description" className="form-control" id="validationCustom02" value={oneProject.description} required></textarea>
-                                                                <div className="valid-feedback">
-                                                                Looks good!
-                                                                </div>
-                                                            </div>
+
+                                                         <Formik validationSchema = {validationProjectSchema}
+                                                        initialValues = {{
+                                                            title : oneProject.title ? oneProject.title : "",
+
+                                                            description : oneProject.title ? oneProject.description : ""
+                                                        }}
+                                                        enableReinitialize = {true}
+                                                        onSubmit = {(values, actions) => {
+                                                            setTimeout(async() => {
+                                                                
+                                                                await axios.patch(`http://localhost:2233/project/oneUpdate/${oneProject._id}`, values);
+                                                                getAllProject();
                                                             
+                                                                const {data} = await axios.get(`http://localhost:2233/project/all?page=${page}&size=5`);
                                                             
-                                                        </form>
+                                                                setAllProject(data.project);
+                                                                setTotalPages(data.totalPage)
+                                                            }, 100)
+                                                        }}
+                                                    >
+                                                        {(props) => (
+                                                            <form onSubmit = {props.handleSubmit} className = "row g-3 needs validation">
+
+                                                                <div className = "col-md-11" >
+                                                                    <label for = "validationCustom" htmlFor = "title" className = "form-label">Title</label>
+                                                                    <input onChange = {props.handleChange} onBlur = {props.handleBlur} type = "text" name = "title" className = "form-control" id = "validationCustom title" value = {props.values.title} required />
+                                                                    {
+                                                                        props.touched.title && props.errors.title ? (
+                                                                            <div>{props.errors.title}</div>
+                                                                        ) : null
+                                                                    }
+                                                                </div> 
+                                                                <div className = "col-md-11" >
+                                                                    <label for = "validationCustom" htmlFor = "description" className = "form-label">Description</label>
+                                                                    <textarea onChange = {props.handleChange} onBlur = {props.handleBlur} type = "text" name = "description" className = "form-control" id = "validationCustom description" value = {props.values.description} required ></textarea>
+                                                                    {
+                                                                        props.touched.description && props.errors.description ? (
+                                                                            <div>{props.errors.description}</div>
+                                                                        ) : null
+                                                                    }
+                                                                </div> 
+                                                                <button type = "submit" className = "btn btn-primary">Update Project</button>
+
+                                                                </form>
+                                                            )}
+
+                                                        </Formik>
+
                                                     </div>
                                                     <div className="modal-footer">
                                                         <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                        <button onClick = {() => handleProjectUpdateOne(e._id)} type="button" className="btn btn-primary">Update</button>
+                                                        {/* <button onClick = {() => handleProjectUpdateOne(e._id)} type="button" className="btn btn-primary">Update</button> */}
                                                     </div>
                                                     </div>
                                                 </div>

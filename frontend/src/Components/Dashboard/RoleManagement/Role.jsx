@@ -1,6 +1,8 @@
 
 import {useState, useEffect} from "react";
 import Pagination from '@mui/material/Pagination';
+import {Formik} from "formik";
+import * as Yup from "yup";
 
 import axios from "axios";
 
@@ -19,7 +21,7 @@ const handleGetAllUser = async () => {
 const initUser = {
     role : ""
 }
-const [oneUser, setOneUser] = useState({});
+const [oneUser, setOneUser] = useState(initUser);
 
 const handleUpdateUserOne = async (id) => {
 
@@ -37,7 +39,7 @@ const handleUpdateUserOneChange = (e) => {
 
 
 const handleUserUpdateOne = async (id) => {
-    delete oneUser._id; 
+    // delete oneUser._id; 
     // console.log(oneUser);
     await axios.patch(`http://localhost:2233/user/oneUpdate/user/${id}`, oneUser);
     const {data} = await axios.get(`http://localhost:2233/user/allUser/user?page=${page}&size=5`);
@@ -68,6 +70,11 @@ const handlePageChange = (event, value) => {
     setPage(value);
 }
 
+
+
+const validationRoleSchema = Yup.object({
+    role : Yup.string().required("Required")
+})
 
 useEffect(() => {
     handleGetAllUser();
@@ -142,7 +149,7 @@ useEffect(() => {
 
 
                                                 {/* modal body */}
-                                                <form onSubmit = {(a) => {
+                                                {/* <form onSubmit = {(a) => {
                                                       a.preventDefault();
                                                     //   handleUserUpdateOne(e._id)
                                                     }} className="row g-3 needs-validation" novalidate>
@@ -159,11 +166,50 @@ useEffect(() => {
                                                    
                                                     
                                                     
-                                                </form>
+                                                </form> */}
+
+                                                <Formik validationSchema = {validationRoleSchema}
+                                                    initialValues = {{
+                                                        role : oneUser.role ? oneUser.role : ""
+                                                    }}
+                                                    enableReinitialize={true}
+                                                    onSubmit = {(values, actions) => {
+                                                        setTimeout(async () => {
+                                                            await axios.patch(`http://localhost:2233/user/oneUpdate/user/${oneUser._id}`, values);
+                                                            const {data} = await axios.get(`http://localhost:2233/user/allUser/user?page=${page}&size=5`);
+                                                            setAllUser(data.user);
+                                                            setTotalPage(data.totalPage);
+                                                        }, 1000)
+                                                    }}
+
+
+                                                >
+                                                    {(props) => (
+                                                        <form onSubmit = {props.handleSubmit}
+                                                        className = "row g-3 needs-validation">
+                                                             <div className = "col-md-11" >
+                                                                <label for = "validationCustom" htmlFor = "role" className = "form-label">Role</label>
+                                                                <input onChange = {props.handleChange} onBlur = {props.handleBlur} type = "text" name = "role" className = "form-control" id = "validationCustom role" value = {props.values.role} required />
+                                                                {
+                                                                    props.touched.role && props.errors.role ? (
+                                                                        <div>{props.errors.role}</div>
+                                                                    ) : null
+                                                                }
+                                                            </div> 
+                                                            <button type = "submit" className = "btn btn-primary">Add role</button>
+                                                        </form>
+                                                    )}
+                                                </Formik>
+
+
+
+
+
+
                                             </div>
                                             <div className="modal-footer">
                                                 <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                <button onClick = {() => handleUserUpdateOne(e._id)} type="button" className="btn btn-primary">Update</button>
+                                                {/* <button onClick = {() => handleUserUpdateOne(e._id)} type="button" className="btn btn-primary">Update</button> */}
                                             </div>
                                             </div>
                                         </div>

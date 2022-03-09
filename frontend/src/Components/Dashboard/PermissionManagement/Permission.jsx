@@ -1,7 +1,8 @@
 
 import {useState, useEffect} from "react";
 import Pagination from '@mui/material/Pagination';
-
+import {Formik} from "formik";
+import * as Yup from "yup";
 import axios from "axios";
 
 
@@ -70,6 +71,25 @@ const handleNameSearch = async (name) => {
 const handlePageChange = (event, value) => {
     setPage(value);
 }
+
+
+
+const validationPermissionSchema = Yup.object({
+    project_create : Yup.string().required("Required"),
+    project_update : Yup.string().required("Required"),
+    project_delete : Yup.string().required("Required"),
+     
+    task_create : Yup.string().required("Required"),
+    task_update : Yup.string().required("Required"),
+    task_delete : Yup.string().required("Required"),
+
+
+    user_create : Yup.string().required("Required"),
+    user_update : Yup.string().required("Required"),
+    user_delete : Yup.string().required("Required"),
+
+    role_update : Yup.string().required("Required"),
+})
 
 
 useEffect(() => {
@@ -198,6 +218,198 @@ useEffect(() => {
 
 
                                                 {/* modal body */}
+
+
+
+
+                                                 <Formik validationSchema = {validationPermissionSchema} 
+                                                    initialValues = {{
+                                                        project_create : oneUser.project_create ? oneUser.project_create : "",
+                                                        project_update : oneUser.project_update ? oneUser.project_update : "",
+                                                        project_delete : oneUser.project_delete ? oneUser.project_delete : "",
+                                                        task_create : oneUser.task_create ? oneUser.task_create : "",
+                                                        task_update : oneUser.task_update ? oneUser.task_update : "",
+                                                        task_delete : oneUser.task_delete ? oneUser.task_delete : "",
+
+                                                        user_create : oneUser.user_create ? oneUser.user_create : "",
+                                                        user_update : oneUser.user_update ? oneUser.user_update : "",
+                                                        user_delete : oneUser.user_delete ? oneUser.user_delete : "",
+
+                                                        role_update : oneUser.role_update ? oneUser.role_update : "",
+                                                    }}
+                                                    enableReinitialize = {true}
+                                                    onSubmit = {(values, actions) => {
+                                                        setTimeout(async() => {
+                                                            await axios.patch(`http://localhost:2233/user/oneUpdate/user/${oneUser._id}`, values);
+                                                            const {data} = await axios.get(`http://localhost:2233/user/allUser/user?page=${page}&size=5`);
+                                                            setAllUser(data.user);
+                                                            setTotalPage(data.totalPage);
+                                                        }, 100)
+                                                    }}
+                                                 >
+                                                
+                                                {(props) => (
+                                                    <form onSubmit = {props.handleSubmit} className = "row g-3 needs validation">
+                                                        <h2>Project permission</h2>
+                                                        <hr />
+                                                    <div className="col-md-11">
+                                                        <label for="validationCustom01" htmlFor = "project_create"  className="form-label">Project create permission</label>
+                                                        <select onChange = {props.handleChange} onBlur = {props.handleBlur} name = "project_create" className="form-control" id="validationCustom01 project_create" value={props.values.project_create} required >
+                                                            <option selected disabled>Please select option</option>
+                                                            <option value = "YES">YES</option>
+                                                            <option value = "NO">NO</option>
+                                                        </select>
+                                                       
+                                                       {
+                                                           props.touched.project_create && props.errors.project_create ? (
+                                                               <div>{props.errors.project_create}</div>
+                                                           ) :null
+                                                       }
+                                                    </div>
+                                                    <div className="col-md-11">
+                                                        <label for="validationCustom011" htmlFor = "project_update" className="form-label">Project update permission</label>
+                                                        <select onChange = {props.handleChange} onBlur = {props.handleBlur}  name = "project_update" className="form-control" id="validationCustom011 project_update" value={props.values.project_update} required >
+                                                            <option selected disabled>Please select option</option>
+                                                            
+                                                            <option value = "YES">YES</option>
+                                                            <option value = "NO">NO</option>
+                                                        </select>
+                                                       {
+                                                           props.touched.project_update && props.errors.project_update ? (
+                                                               <div>{props.errors.project_update}</div>
+                                                           ) : null
+                                                       }
+                                                    </div>
+                                                    <div className="col-md-11">
+                                                        <label for="validationCustom01" htmlFor = "project_delete"  className="form-label">Project delete permission</label>
+                                                        <select onChange = {props.handleChange} onBlur = {props.handleBlur} name = "project_delete" className="form-control" id="validationCustom01 project_delete" value={props.values.project_delete} required >
+                                                            <option selected disabled>Please select option</option>
+                                                            <option value = "YES">YES</option>
+                                                            <option value = "NO">NO</option>
+                                                        </select>
+                                                       
+                                                       {
+                                                           props.touched.project_delete && props.errors.project_delete ? (
+                                                               <div>{props.errors.project_delete}</div>
+                                                           ) :null
+                                                       }
+                                                    </div>
+                                                    <hr />
+                                                    <h2>Task permission</h2>
+                                                   <hr />
+
+                                                   <div className="col-md-11">
+                                                        <label for="validationCustom01" htmlFor = "task_create"  className="form-label">Task create permission</label>
+                                                        <select onChange = {props.handleChange} onBlur = {props.handleBlur} name = "task_create" className="form-control" id="validationCustom01 task_create" value={props.values.task_create} required >
+                                                            <option selected disabled>Please select option</option>
+                                                            <option value = "YES">YES</option>
+                                                            <option value = "NO">NO</option>
+                                                        </select>
+                                                       
+                                                       {
+                                                           props.touched.task_create && props.errors.task_create ? (
+                                                               <div>{props.errors.task_create}</div>
+                                                           ) :null
+                                                       }
+                                                    </div>
+                                                    <div className="col-md-11">
+                                                        <label for="validationCustom01" htmlFor = "task_update"  className="form-label">Task update permission</label>
+                                                        <select onChange = {props.handleChange} onBlur = {props.handleBlur} name = "task_update" className="form-control" id="validationCustom01 task_update" value={props.values.task_update} required >
+                                                            <option selected disabled>Please select option</option>
+                                                            <option value = "YES">YES</option>
+                                                            <option value = "NO">NO</option>
+                                                        </select>
+                                                       
+                                                       {
+                                                           props.touched.task_update && props.errors.task_update ? (
+                                                               <div>{props.errors.task_update}</div>
+                                                           ) :null
+                                                       }
+                                                    </div>
+                                                    <div className="col-md-11">
+                                                        <label for="validationCustom01" htmlFor = "task_delete"  className="form-label">Task delete permission</label>
+                                                        <select onChange = {props.handleChange} onBlur = {props.handleBlur} name = "task_delete" className="form-control" id="validationCustom01 task_delete" value={props.values.task_delete} required >
+                                                            <option selected disabled>Please select option</option>
+                                                            <option value = "YES">YES</option>
+                                                            <option value = "NO">NO</option>
+                                                        </select>
+                                                       
+                                                       {
+                                                           props.touched.task_delete && props.errors.task_delete ? (
+                                                               <div>{props.errors.task_delete}</div>
+                                                           ) :null
+                                                       }
+                                                    </div>
+                                                    <hr />
+                                                    <h2>User Permission</h2>
+                                                    <hr />
+                                                    <div className="col-md-11">
+                                                        <label for="validationCustom01" htmlFor = "user_create"  className="form-label">User Create permission</label>
+                                                        <select onChange = {props.handleChange} onBlur = {props.handleBlur} name = "user_create" className="form-control" id="validationCustom01 user_create" value={props.values.user_create} required >
+                                                            <option selected disabled>Please select option</option>
+                                                            <option value = "YES">YES</option>
+                                                            <option value = "NO">NO</option>
+                                                        </select>
+                                                       
+                                                       {
+                                                           props.touched.user_create && props.errors.user_create ? (
+                                                               <div>{props.errors.user_create}</div>
+                                                           ) :null
+                                                       }
+                                                    </div>
+                                                    <div className="col-md-11">
+                                                        <label for="validationCustom01" htmlFor = "user_update"  className="form-label">User update permission</label>
+                                                        <select onChange = {props.handleChange} onBlur = {props.handleBlur} name = "user_update" className="form-control" id="validationCustom01 user_update" value={props.values.user_update} required >
+                                                            <option selected disabled>Please select option</option>
+                                                            <option value = "YES">YES</option>
+                                                            <option value = "NO">NO</option>
+                                                        </select>
+                                                       
+                                                       {
+                                                           props.touched.user_update && props.errors.user_update ? (
+                                                               <div>{props.errors.user_update}</div>
+                                                           ) :null
+                                                       }
+                                                    </div>
+                                                    <div className="col-md-11">
+                                                        <label for="validationCustom01" htmlFor = "user_delete"  className="form-label">User delete permission</label>
+                                                        <select onChange = {props.handleChange} onBlur = {props.handleBlur} name = "user_delete" className="form-control" id="validationCustom01 user_delete" value={props.values.user_delete} required >
+                                                            <option selected disabled>Please select option</option>
+                                                            <option value = "YES">YES</option>
+                                                            <option value = "NO">NO</option>
+                                                        </select>
+                                                       
+                                                       {
+                                                           props.touched.user_delete && props.errors.user_delete ? (
+                                                               <div>{props.errors.user_delete}</div>
+                                                           ) :null
+                                                       }
+                                                    </div>
+                                                <hr />
+                                                <h2>User Role permission</h2>
+                                                <hr />
+                                                <div className="col-md-11">
+                                                        <label for="validationCustom01" htmlFor = "role_update"  className="form-label">User Role update permission</label>
+                                                        <select onChange = {props.handleChange} onBlur = {props.handleBlur} name = "role_update" className="form-control" id="validationCustom01 role_update" value={props.values.role_update} required >
+                                                            <option selected disabled>Please select option</option>
+                                                            <option value = "YES">YES</option>
+                                                            <option value = "NO">NO</option>
+                                                        </select>
+                                                       
+                                                       {
+                                                           props.touched.role_update && props.errors.role_update ? (
+                                                               <div>{props.errors.role_update}</div>
+                                                           ) :null
+                                                       }
+                                                    </div>
+                                                    <button type = "submit" className = "btn btn-primary">Give this permission to user</button>
+
+                                                    </form>
+                                                )}
+                                                
+                                                </Formik>
+
+{/* 
                                                 <form onSubmit = {(a) => a.preventDefault()} className="row g-3 needs-validation" novalidate>
                                                     <h2>Project permission</h2>
                                                     <hr />
@@ -360,7 +572,7 @@ useEffect(() => {
                                                     
                                                     
                                                     
-                                                </form>
+                                                </form> */}
                                             </div>
                                             <div className="modal-footer">
                                                 <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
