@@ -7,43 +7,7 @@ import * as Yup from 'yup';
 
 const User = () => {
 
-    const formik = useFormik({
-        initialValues : { 
-            name : "",
-            email : "",
-            dateOfBirth : "",
-            sex : "",
-            bloodGroup : "",
-            contactNumber : "",
-            emergencyContactNumber : "",
-            presentAddress : "",
-            hobbies : "",
-            panNumber : "",
-            adharNumber : "",
-            motherTongue : "",
-            fatherName : "",
-            motherName : ""
-        },
-        validationSchema : Yup.object({
-            name : Yup.string().max(15, "Must be 15 characters or less").required("required"),
-            email : Yup.String().email("Invalid email address").required("Required"),
-            dateOfBirth : Yup.String().required("Required"),
-            sex : Yup.String().required("Required"),
-            bloodGroup : Yup.String().required("Required"),
-            contactNumber : Yup.Number().min(10, "Must be 10 numbers").required("Required"),
-            emergencyContactNumber : Yup.Number().min(10, "Must be 10 numbers").required("Required"),
-            presentAddress : Yup.String().required("Required"),
-            hobbies : Yup.String().required("Required"),
-            panNumber: Yup.String().min(8, "Min 8 Characters").required("Required"),
-            adharNumber : Yup.Number().min(12, "Min 12 Number").required("Required"),
-            motherTongue : Yup.String().required("Required"),
-            fatherName : Yup.String().max(30, "Maximum 30 characters").required("Required"),
-            motherName : Yup.String().max(30, "Maxmum 30 characters Required").required("Required")
-        }),
-        onSubmit : async (values) => {
-            console.log("this is the name of the file adn the other thing is nothing");
-        }
-    })
+   
 
 
 
@@ -205,6 +169,65 @@ const User = () => {
     }
 
 
+
+
+
+
+    // usedFormik
+    const formik = useFormik({
+        initialValues : { 
+            name : "",
+            email : "",
+            dateOfBirth : "",
+            sex : "",
+            bloodGroup : "",
+            contactNumber : "",
+            emergencyContactNumber : "",
+            presentAddress : "",
+            hobbies : "",
+            panNumber : "",
+            adharNumber : "",
+            motherTongue : "",
+            fatherName : "",
+            motherName : ""
+        },
+        validationSchema : Yup.object({
+            name : Yup.string().max(15, "Must be 15 characters or less").required("required"),
+            email : Yup.string().email("Invalid email address").required("Required"),
+            dateOfBirth : Yup.string().required("Required"),
+            sex : Yup.string().required("Required"),
+            bloodGroup : Yup.string().required("Required"),
+            contactNumber : Yup.number().min(10, "Must be 10 numbers").required("Required"),
+            emergencyContactNumber : Yup.number().min(10, "Must be 10 numbers").required("Required"),
+            presentAddress : Yup.string().required("Required"),
+            hobbies : Yup.string().required("Required"),
+            panNumber: Yup.string().min(8, "Min 8 Characters").required("Required"),
+            adharNumber : Yup.number().min(12, "Min 12 Number").required("Required"),
+            maritialStatus : Yup.string().required("Required"),
+            motherTongue : Yup.string().required("Required"),
+            fatherName : Yup.string().max(30, "Maximum 30 characters").required("Required"),
+            motherName : Yup.string().max(30, "Maxmum 30 characters Required").required("Required")
+        }),
+        onSubmit : values => {
+            alert(values);
+            console.log(values);
+            console.log("this is the name of the file adn the other thing is nothing");
+            console.log("this is the name of the file")
+        //     await axios.post("http://localhost:2233/user/create/user", createUser);
+        //     const {data} = await axios.get(`http://localhost:2233/user/allUser/user?page=${page}&size=5`);
+        //    setAllUser(data.user);
+        //    setTotalPage(data.totalPage);
+        },
+    })
+
+
+
+
+
+
+
+
+
     useEffect(() => {
         getAllUser();
     }, [page])
@@ -267,7 +290,7 @@ const User = () => {
 
 
 
-                <form onSubmit = {formik.handleSubmit} className="row g-3 needs-validation" novalidate>
+                <form onSubmit = {formik.handleSubmit} className="row g-3 needs-validation" >
                                 <div className="col-md-11">
                                     <label for="validationCustom01" htmlFor = "name" className="form-label">Name</label>
                                     <input onChange = {formik.handleChange} onBlur = {formik.handleBlur} type="text" name = "name" className= "form-control" id="validationCustom01 name" value={formik.values.name} required />
@@ -276,205 +299,146 @@ const User = () => {
                                     ) : null}
                                 </div>
                                 <div className="col-md-11">
-                                    <label for="validationCustom02" className="form-label">Email </label>
-                                    <input  onChange = {(e) => {
-                                        handleChangeUser(e)
-                                    }} type = "email" name = "email" className={(createUser.email === "" ? ("form-control is-invalid") : ("form-control is-valid"))}                                    id="validationCustom02" value={createUser.email} required />
-                                     {
-                                        createUser.email === "" ? (
-                                            <div className = "invalid-feedback">
-                                            Email is required
-                                            </div>
-                                        ) : (
-                                            <div className="valid-feedback">
-                                                 Looks good!
-                                            </div>
-                                        )
+                                    <label for="validationCustom02" htmlFor = "email" className="form-label">Email </label>
+                                    <input  onChange = {formik.handleChange} type = "email" name = "email" className="form-control"  id="validationCustom02 email" value={formik.values.email} required />
+                                    {
+                                    formik.touched.email && formik.errors.email ? (
+                                        <div>{formik.errors.email}</div>
+                                    ) : null
                                     }
                                 </div>
                                 <div className="col-md-11">
-                                    <label for="validationCustom02" className="form-label">Date of Birth </label>
-                                    <input  type = "date"  onChange = {(e) => {
-                                        handleChangeUser(e)
-                                    }} name = "dateOfBirth" className={(createUser.dateOfBirth === "" ? ("form-control is-invalid") : ("form-control is-valid"))} id="validationCustom02" value={createUser.dateOfBirth} required />
-                                     {
-                                        createUser.dateOfBirth === "" ? (
-                                            <div className = "invalid-feedback">
-                                        date of birth is required
-                                            </div>
-                                        ) : (
-                                            <div className="valid-feedback">
-                                                 Looks good!
-                                            </div>
-                                        )
+                                    <label for="validationCustom02" htmlFor = "dateOfBirth" className="form-label">Date of Birth </label>
+                                    <input  type = "date"  onChange = {formik.handleChange} name = "dateOfBirth" className="form-control" id="validationCustom02" value={formik.values.dateOfBirth} required />
+                                    {
+                                    formik.touched.dateOfBirth && formik.errors.dateOfBirth ? (
+                                        <div>{formik.errors.dateOfBirth}</div>
+                                    ) : null
                                     }
                                 </div>
                                 <div className="col-md-11">
-                                    <label for="validationCustom02" className="form-label">Sex </label>
-                                    <select name = "sex" onChange = {(e) => handleChangeUser(e)} className = "form-control">
+                                    <label for="validationCustom02" htmlFor = "sex" className="form-label">Sex </label>
+                                    <select name = "sex" onChange = {formik.handleChange} id = "sex" className = "form-control" value = {formik.values.sex}>
                                         <option value = "Male">Male</option>
                                         <option value = "Female">Female</option>
                                     </select>
-                                </div>
-                                <div className="col-md-11">
-                                    <label for="validationCustom02" className="form-label">Blood Group </label>
-                                    <input type = "text"  onChange = {(e) => {
-                                        handleChangeUser(e)
-                                    }} name = "bloodGroup" className="form-control" id="validationCustom02" value={createUser.bloodGroup} />
-                                    <div className="valid-feedback">
-                                    Looks good!
-                                    </div>
-                                </div>
-                                <div className="col-md-11">
-                                    <label for="validationCustom02" className="form-label"> Contact Number </label>
-                                    <input type = "number"  onChange = {(e) => {
-                                        handleChangeUser(e)
-                                    }} name = "contactNumber" className={(createUser.contactNumber === "" ? ("form-control is-invalid") : ("form-control is-valid"))}id="validationCustom02" value={createUser.contactNumber} />
                                     {
-                                        createUser.contactNumber === "" ? (
-                                            <div className = "invalid-feedback">
-                                            Contact Number  is required
-                                            </div>
-                                        ) : (
-                                            <div className="valid-feedback">
-                                                 Looks good!
-                                            </div>
-                                        )
+                                        formik.touched.sex && formik.errors.sex ? (
+                                            <div>{formik.errors.sex}</div>
+                                        ) : null
                                     }
+                                </div>
+                                <div className="col-md-11">
+                                    <label for="validationCustom02" htmlFor = "bloodGroup" className="form-label">Blood Group </label>
+                                    <input type = "text"  onChange = {formik.handleChange} name = "bloodGroup" className="form-control" id="validationCustom02 bloodGroup" value={formik.values.bloodGroup} />
+                                    {
+                                        formik.touched.bloodGroup && formik.errors.bloodGroup ? (
+                                            <div>{formik.errors.bloodGroup}</div> 
+                                        ) : null
+                                    }
+                                </div>
+                                <div className="col-md-11">
+                                    <label for="validationCustom02" htmlFor = "contactNumber" className="form-label"> Contact Number </label>
+                                    <input type = "number"  onChange = {formik.handleChange} name = "contactNumber" className="form-control" id="validationCustom02 contactNumber" value={formik.values.contactNumber} />
+                                   {
+                                       formik.touched.contactNumber && formik.errors.contactNumber ? (
+                                           <div>{formik.errors.contactNumber}</div>
+                                       ) : null
+                                   }
                                 </div>
                                 
                                 <div className="col-md-11">
-                                    <label for="validationCustom02" className="form-label">Emergency Contact Number </label>
-                                    <input  onChange = {(e) => {
-                                        handleChangeUser(e)
-                                    }} type = "number" name = "emergencyContactNumber" className={(createUser.emergencyContactNumber === "" ? ("form-control is-invalid") : ("form-control is-valid"))}id="validationCustom02" value={createUser.EmergencyContactNumber} />
+                                    <label for="validationCustom02" htmlFor = "emergencyContactNumber" className="form-label">Emergency Contact Number </label>
+                                    <input  onChange = {formik.handleChange} type = "number" name = "emergencyContactNumber" className= "form-control" id="validationCustom02 emergencyContactNumber" value={formik.values.emergencyContactNumber} />
                                      {
-                                        createUser.emergencyContactNumber === "" ? (
-                                            <div className = "invalid-feedback">
-                                            Emergency Contact Number is required
-                                            </div>
-                                        ) : (
-                                            <div className="valid-feedback">
-                                                 Looks good!
-                                            </div>
-                                        )
+                                        formik.touched.emergencyContactNumber && formik.errors.emergencyContactNumber ? (
+                                            <div>{formik.errors.emergencyContactNumber}</div>
+                                        ) : null
                                     }
                                 </div>
                                 <div className="col-md-11">
-                                    <label for="validationCustom02" className="form-label">Present Address </label>
-                                    <input type = "text"  onChange = {(e) => {
-                                        handleChangeUser(e)
-                                    }} name = "presentAddress" className={(createUser.presentAddress === "" ? ("form-control is-invalid") : ("form-control is-valid"))} id="validationCustom02" value={createUser.presentAddress} />
+                                    <label for="validationCustom02" htmlFor = "presentAddress" className="form-label">Present Address </label>
+                                    <input type = "text"  onChange = {formik.handleChange} name = "presentAddress" className="form-control" id="validationCustom02 presentAddress" value={formik.values.presentAddress} />
                                     {
-                                        createUser.presentAddress === "" ? (
-                                            <div className = "invalid-feedback">
-                                            Present address is required
-                                            </div>
-                                        ) : (
-                                            <div className="valid-feedback">
-                                                 Looks good!
-                                            </div>
-                                        )
+                                        formik.touched.presentAddress && formik.errors.presentAddress ? (
+                                            <div>{formik.errors.presentAddress}</div>
+                                        ) : null
                                     }
                                 </div>
 
                                 <div className="col-md-11">
-                                    <label for="validationCustom02" className="form-label">Hobbies </label>
-                                    <textarea  onChange = {(e) => {
-                                        handleChangeUser(e)
-                                    }} name = "hobbies" className="form-control" id="validationCustom02" value={createUser.hobbies} ></textarea>
-                                    <div className="valid-feedback">
-                                    Looks good!
-                                    </div>
+                                    <label for="validationCustom02" htmlFor = "hobbies" className="form-label">Hobbies </label>
+                                    <textarea  onChange = {formik.handleChange} name = "hobbies" className="form-control" id="validationCustom02 hobbies" value={formik.values.hobbies} ></textarea>
+                                    {
+                                        formik.touched.hobbies && formik.errors.hobbies ? (
+                                            <div>{formik.errors.hobbies}</div>
+                                        ) : null
+                                    }
                                 </div>
                                 <div className="col-md-11">
-                                    <label for="validationCustom02" className="form-label">Pan number </label>
-                                    <input type = "text"  onChange = {(e) => {
-                                        handleChangeUser(e)
-                                    }} name = "panNumber" className={(createUser.panNumber === "" ? ("form-control is-invalid") : ("form-control is-valid"))} id="validationCustom02" value={createUser.panNumber} />
+                                    <label for="validationCustom02" htmlFor = "panNumber" className="form-label">Pan number </label>
+                                    <input type = "text"  onChange = {formik.handleChange} name = "panNumber" className="form-control" id="validationCustom02 presentAddress" value={formik.values.panNumber} />
                                    {
-                                        createUser.panNumber === "" ? (
-                                            <div className = "invalid-feedback">
-                                            Pan is required
-                                            </div>
-                                        ) : (
-                                            <div className="valid-feedback">
-                                                 Looks good!
-                                            </div>
-                                        )
+                                        formik.touched.panNumber && formik.errors.panNumber ? (
+                                            <div>{formik.errors.panNumber} </div>
+                                        ) : null
                                     }
                                 </div>
 
                                 <div className="col-md-11">
-                                    <label for="validationCustom02" className="form-label">Adhar Number </label>
-                                    <input  onChange = {(e) => {
-                                        handleChangeUser(e)
-                                    }}  type = "number" name = "adharNumber" className={(createUser.adharNumber === "" ? ("form-control is-invalid") : ("form-control is-valid"))} id="validationCustom02" value={createUser.adharNumber} />
+                                    <label for="validationCustom02" htmlFor = "adharNumber" className="form-label">Adhar Number </label>
+                                    <input  onChange = {formik.handleChange}  type = "number" name = "adharNumber" className="form-control" id="validationCustom02 adharNumber" value={formik.values.adharNumber} />
                                     
-                                   { createUser.adharNumber === "" ? (
-                                            <div className = "invalid-feedback">
-                                            Addhar Number is required
-                                            </div>
-                                        ) : (
-                                            <div className="valid-feedback">
-                                                 Looks good!
-                                            </div>
-                                        )
+                                   { 
+                                   formik.touched.adharNumber && formik.errors.adharNumber ? (
+                                       <div>{formik.errors.adharNumber}</div>
+                                   ) : null
                                     }
                                 </div>
 
                                 <div className="col-md-11">
-                                    <label for="validationCustom02" className="form-label">Mother Tongue </label>
-                                    <input type = "text"  onChange = {(e) => {
-                                        handleChangeUser(e)
-                                    }} name = "motherTongue" className="form-control" id="validationCustom02" value={createUser.motherTongue} />
-                                    <div className="valid-feedback">
-                                    Looks good!
-                                    </div>
+                                    <label for="validationCustom02" htmlFor = "motherTongue" className="form-label">Mother Tongue </label>
+                                    <input type = "text"  onChange = {formik.handleChange} name = "motherTongue" className="form-control" id="validationCustom02 motherTongue" value={formik.values.motherTongue} />
+                                    {
+                                        formik.touched.motherTongue && formik.errors.motherTongue ? (
+                                            <div>{formik.errors.motherTongue}</div>
+                                        ) : null
+                                    }
                                 </div>
 
                                 <div className="col-md-11">
-                                    <label for="validationCustom02" className="form-label">Marital Status </label>
-                                    <select name = "maritialStatus" onChange = {(e) => handleChangeUser(e)} className = "form-control">
+                                    <label for="validationCustom02" htmlFor = "maritialStatus" className="form-label">Marital Status </label>
+                                    <select name = "maritialStatus" onChange = {formik.handleChange} className = "form-control" id = "validationCustom02 maritialStatus" value = {formik.values.maritialStatus}>
                                         <option value = "Married">Married</option>
                                         <option value = "Unmarried">Unmarried</option>
                                     </select>
-                                </div>
-                                <div className="col-md-11">
-                                    <label for="validationCustom02" className="form-label">Father name </label>
-                                    <input type = "text"  onChange = {(e) => {
-                                        handleChangeUser(e)
-                                    }} name = "fatherName" className={(createUser.fatherName === "" ? ("form-control is-invalid") : ("form-control is-valid"))} id="validationCustom02" value={createUser.fatherName} />
-                                   {
-                                        createUser.fatherName === "" ? (
-                                            <div className = "invalid-feedback">
-                                            Father Name is required
-                                            </div>
-                                        ) : (
-                                            <div className="valid-feedback">
-                                                 Looks good!
-                                            </div>
-                                        )
-                                    }
-                                </div>
-                                <div className="col-md-11">
-                                    <label for="validationCustom02" className="form-label">Mother name </label>
-                                    <input  onChange = {(e) => {
-                                        handleChangeUser(e)
-                                    }} type = "text" name = "motherName" className={(createUser.motherName === "" ? ("form-control is-invalid") : ("form-control is-valid"))} id="validationCustom02" value={createUser.motherName} />
                                     {
-                                        createUser.motherName === "" ? (
-                                            <div className = "invalid-feedback">
-                                            Mothername is required
-                                            </div>
-                                        ) : (
-                                            <div className="valid-feedback">
-                                                 Looks good!
-                                            </div>
-                                        )
+                                        formik.touched.maritialStatus && formik.errors.maritialStatus ? (
+                                            <div>{formik.errors.maritialStatus} </div>
+                                        ) : null
                                     }
                                 </div>
-                                <button onClick = {handleCreateUserBtn} type="submit" class="btn btn-primary">Submit</button>
+                                <div className="col-md-11">
+                                    <label for="validationCustom02" htmlFor = "fatherName" className="form-label">Father name </label>
+                                    <input type = "text"  onChange = {formik.handleChange} name = "fatherName" className="form-control" id="validationCustom02 fatherName" value={formik.values.fatherName} />
+                                   {
+                                      formik.touched.fatherName && formik.errors.fatherName ? (
+                                          <div>{formik.errors.fatherName}</div>
+                                      ) : null
+                                    }
+                                </div>
+                                <div className="col-md-11">
+                                    <label for="validationCustom02" htmlFor = "motherName" className="form-label">Mother name </label>
+                                    <input  onChange = {formik.handleChange} type = "text" name = "motherName" className="form-control" id="validationCustom02 motherName" value={formik.values.motherName} />
+                                    {
+                                        formik.touched.motherName && formik.errors.motherName ? (
+                                            <div>{formik.errors.motherName}</div>
+                                        ) : null
+                                    }
+                                </div>
+                                {/* <button onClick = {handleCreateUserBtn} type="submit" class="btn btn-primary">Submit</button> */}
+                                <button type="submit" class="btn btn-primary">Submit</button>
+
                                 
                             </form>
 
