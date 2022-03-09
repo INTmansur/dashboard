@@ -2,6 +2,8 @@
 import {useState, useEffect} from "react";
 import axios from "axios";
 
+
+
 const Task = ({SetAllTask, AllTask, projectID, handleShowAllTask}) => {
 
 // console.log(AllTask, projectID);
@@ -70,6 +72,7 @@ const handleDeleteTask = async (id) => {
 }
     
 
+
 useEffect(async() => {
     const {data} = await axios.get(`http://localhost:2233/task/all/task/all/${projectID}`);
      SetAllTask(data);
@@ -103,6 +106,7 @@ useEffect(async() => {
                                 <td>
                          
                          <i data-bs-toggle="modal" data-bs-target="#updateModala" onClick = {() => {
+                            //  open();
                              handleUpdateTaskOne(e._id);
                          }} className='fas fa-edit'></i>
 

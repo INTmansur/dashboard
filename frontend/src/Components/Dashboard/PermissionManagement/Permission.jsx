@@ -75,20 +75,20 @@ const handlePageChange = (event, value) => {
 
 
 const validationPermissionSchema = Yup.object({
-    project_create : Yup.string().required("Required"),
-    project_update : Yup.string().required("Required"),
-    project_delete : Yup.string().required("Required"),
+    project_create : Yup.string().required("Give the permission"),
+    project_update : Yup.string().required("Give the permission"),
+    project_delete : Yup.string().required("Give the permission"),
      
-    task_create : Yup.string().required("Required"),
-    task_update : Yup.string().required("Required"),
-    task_delete : Yup.string().required("Required"),
+    task_create : Yup.string().required("Give the permission"),
+    task_update : Yup.string().required("Give the permission"),
+    task_delete : Yup.string().required("Give the permission"),
 
 
-    user_create : Yup.string().required("Required"),
-    user_update : Yup.string().required("Required"),
-    user_delete : Yup.string().required("Required"),
+    user_create : Yup.string().required("Give the permission"),
+    user_update : Yup.string().required("Give the permission"),
+    user_delete : Yup.string().required("Give the permission"),
 
-    role_update : Yup.string().required("Required"),
+    role_update : Yup.string().required("Give the permission"),
 })
 
 
@@ -254,7 +254,7 @@ useEffect(() => {
                                                         <hr />
                                                     <div className="col-md-11">
                                                         <label for="validationCustom01" htmlFor = "project_create"  className="form-label">Project create permission</label>
-                                                        <select onChange = {props.handleChange} onBlur = {props.handleBlur} name = "project_create" className="form-control" id="validationCustom01 project_create" value={props.values.project_create} required >
+                                                        <select onChange = {props.handleChange} onBlur = {props.handleBlur} name = "project_create" className="form-control" id="validationCustom01 project_create" value={props.values.project_create}  >
                                                             <option selected disabled>Please select option</option>
                                                             <option value = "YES">YES</option>
                                                             <option value = "NO">NO</option>
@@ -262,13 +262,13 @@ useEffect(() => {
                                                        
                                                        {
                                                            props.touched.project_create && props.errors.project_create ? (
-                                                               <div>{props.errors.project_create}</div>
+                                                               <div style = {{color : "red"}}>{props.errors.project_create}</div>
                                                            ) :null
                                                        }
                                                     </div>
                                                     <div className="col-md-11">
                                                         <label for="validationCustom011" htmlFor = "project_update" className="form-label">Project update permission</label>
-                                                        <select onChange = {props.handleChange} onBlur = {props.handleBlur}  name = "project_update" className="form-control" id="validationCustom011 project_update" value={props.values.project_update} required >
+                                                        <select onChange = {props.handleChange} onBlur = {props.handleBlur}  name = "project_update" className="form-control" id="validationCustom011 project_update" value={props.values.project_update}  >
                                                             <option selected disabled>Please select option</option>
                                                             
                                                             <option value = "YES">YES</option>
@@ -276,13 +276,13 @@ useEffect(() => {
                                                         </select>
                                                        {
                                                            props.touched.project_update && props.errors.project_update ? (
-                                                               <div>{props.errors.project_update}</div>
+                                                               <div style = {{color : "red"}}>{props.errors.project_update}</div>
                                                            ) : null
                                                        }
                                                     </div>
                                                     <div className="col-md-11">
                                                         <label for="validationCustom01" htmlFor = "project_delete"  className="form-label">Project delete permission</label>
-                                                        <select onChange = {props.handleChange} onBlur = {props.handleBlur} name = "project_delete" className="form-control" id="validationCustom01 project_delete" value={props.values.project_delete} required >
+                                                        <select onChange = {props.handleChange} onBlur = {props.handleBlur} name = "project_delete" className="form-control" id="validationCustom01 project_delete" value={props.values.project_delete}  >
                                                             <option selected disabled>Please select option</option>
                                                             <option value = "YES">YES</option>
                                                             <option value = "NO">NO</option>
@@ -290,7 +290,7 @@ useEffect(() => {
                                                        
                                                        {
                                                            props.touched.project_delete && props.errors.project_delete ? (
-                                                               <div>{props.errors.project_delete}</div>
+                                                               <div style = {{color : "red"}}>{props.errors.project_delete}</div>
                                                            ) :null
                                                        }
                                                     </div>
@@ -300,7 +300,7 @@ useEffect(() => {
 
                                                    <div className="col-md-11">
                                                         <label for="validationCustom01" htmlFor = "task_create"  className="form-label">Task create permission</label>
-                                                        <select onChange = {props.handleChange} onBlur = {props.handleBlur} name = "task_create" className="form-control" id="validationCustom01 task_create" value={props.values.task_create} required >
+                                                        <select onChange = {props.handleChange} onBlur = {props.handleBlur} name = "task_create" className="form-control" id="validationCustom01 task_create" value={props.values.task_create}  >
                                                             <option selected disabled>Please select option</option>
                                                             <option value = "YES">YES</option>
                                                             <option value = "NO">NO</option>
@@ -308,13 +308,13 @@ useEffect(() => {
                                                        
                                                        {
                                                            props.touched.task_create && props.errors.task_create ? (
-                                                               <div>{props.errors.task_create}</div>
+                                                               <div style = {{color : "red"}}>{props.errors.task_create}</div>
                                                            ) :null
                                                        }
                                                     </div>
                                                     <div className="col-md-11">
                                                         <label for="validationCustom01" htmlFor = "task_update"  className="form-label">Task update permission</label>
-                                                        <select onChange = {props.handleChange} onBlur = {props.handleBlur} name = "task_update" className="form-control" id="validationCustom01 task_update" value={props.values.task_update} required >
+                                                        <select onChange = {props.handleChange} onBlur = {props.handleBlur} name = "task_update" className="form-control" id="validationCustom01 task_update" value={props.values.task_update}  >
                                                             <option selected disabled>Please select option</option>
                                                             <option value = "YES">YES</option>
                                                             <option value = "NO">NO</option>
@@ -322,13 +322,13 @@ useEffect(() => {
                                                        
                                                        {
                                                            props.touched.task_update && props.errors.task_update ? (
-                                                               <div>{props.errors.task_update}</div>
+                                                               <div style = {{color : "red"}}>{props.errors.task_update}</div>
                                                            ) :null
                                                        }
                                                     </div>
                                                     <div className="col-md-11">
                                                         <label for="validationCustom01" htmlFor = "task_delete"  className="form-label">Task delete permission</label>
-                                                        <select onChange = {props.handleChange} onBlur = {props.handleBlur} name = "task_delete" className="form-control" id="validationCustom01 task_delete" value={props.values.task_delete} required >
+                                                        <select onChange = {props.handleChange} onBlur = {props.handleBlur} name = "task_delete" className="form-control" id="validationCustom01 task_delete" value={props.values.task_delete}  >
                                                             <option selected disabled>Please select option</option>
                                                             <option value = "YES">YES</option>
                                                             <option value = "NO">NO</option>
@@ -336,7 +336,7 @@ useEffect(() => {
                                                        
                                                        {
                                                            props.touched.task_delete && props.errors.task_delete ? (
-                                                               <div>{props.errors.task_delete}</div>
+                                                               <div style = {{color : "red"}}>{props.errors.task_delete}</div>
                                                            ) :null
                                                        }
                                                     </div>
@@ -345,7 +345,7 @@ useEffect(() => {
                                                     <hr />
                                                     <div className="col-md-11">
                                                         <label for="validationCustom01" htmlFor = "user_create"  className="form-label">User Create permission</label>
-                                                        <select onChange = {props.handleChange} onBlur = {props.handleBlur} name = "user_create" className="form-control" id="validationCustom01 user_create" value={props.values.user_create} required >
+                                                        <select onChange = {props.handleChange} onBlur = {props.handleBlur} name = "user_create" className="form-control" id="validationCustom01 user_create" value={props.values.user_create}  >
                                                             <option selected disabled>Please select option</option>
                                                             <option value = "YES">YES</option>
                                                             <option value = "NO">NO</option>
@@ -353,13 +353,13 @@ useEffect(() => {
                                                        
                                                        {
                                                            props.touched.user_create && props.errors.user_create ? (
-                                                               <div>{props.errors.user_create}</div>
+                                                               <div style = {{color : "red"}}>{props.errors.user_create}</div>
                                                            ) :null
                                                        }
                                                     </div>
                                                     <div className="col-md-11">
                                                         <label for="validationCustom01" htmlFor = "user_update"  className="form-label">User update permission</label>
-                                                        <select onChange = {props.handleChange} onBlur = {props.handleBlur} name = "user_update" className="form-control" id="validationCustom01 user_update" value={props.values.user_update} required >
+                                                        <select onChange = {props.handleChange} onBlur = {props.handleBlur} name = "user_update" className="form-control" id="validationCustom01 user_update" value={props.values.user_update}  >
                                                             <option selected disabled>Please select option</option>
                                                             <option value = "YES">YES</option>
                                                             <option value = "NO">NO</option>
@@ -367,13 +367,13 @@ useEffect(() => {
                                                        
                                                        {
                                                            props.touched.user_update && props.errors.user_update ? (
-                                                               <div>{props.errors.user_update}</div>
+                                                               <div style = {{color : "red"}}>{props.errors.user_update}</div>
                                                            ) :null
                                                        }
                                                     </div>
                                                     <div className="col-md-11">
                                                         <label for="validationCustom01" htmlFor = "user_delete"  className="form-label">User delete permission</label>
-                                                        <select onChange = {props.handleChange} onBlur = {props.handleBlur} name = "user_delete" className="form-control" id="validationCustom01 user_delete" value={props.values.user_delete} required >
+                                                        <select onChange = {props.handleChange} onBlur = {props.handleBlur} name = "user_delete" className="form-control" id="validationCustom01 user_delete" value={props.values.user_delete}  >
                                                             <option selected disabled>Please select option</option>
                                                             <option value = "YES">YES</option>
                                                             <option value = "NO">NO</option>
@@ -381,7 +381,7 @@ useEffect(() => {
                                                        
                                                        {
                                                            props.touched.user_delete && props.errors.user_delete ? (
-                                                               <div>{props.errors.user_delete}</div>
+                                                               <div style = {{color : "red"}}>{props.errors.user_delete}</div>
                                                            ) :null
                                                        }
                                                     </div>
@@ -390,7 +390,7 @@ useEffect(() => {
                                                 <hr />
                                                 <div className="col-md-11">
                                                         <label for="validationCustom01" htmlFor = "role_update"  className="form-label">User Role update permission</label>
-                                                        <select onChange = {props.handleChange} onBlur = {props.handleBlur} name = "role_update" className="form-control" id="validationCustom01 role_update" value={props.values.role_update} required >
+                                                        <select onChange = {props.handleChange} onBlur = {props.handleBlur} name = "role_update" className="form-control" id="validationCustom01 role_update" value={props.values.role_update}  >
                                                             <option selected disabled>Please select option</option>
                                                             <option value = "YES">YES</option>
                                                             <option value = "NO">NO</option>
@@ -398,7 +398,7 @@ useEffect(() => {
                                                        
                                                        {
                                                            props.touched.role_update && props.errors.role_update ? (
-                                                               <div>{props.errors.role_update}</div>
+                                                               <div style = {{color : "red"}}>{props.errors.role_update}</div>
                                                            ) :null
                                                        }
                                                     </div>
@@ -417,7 +417,7 @@ useEffect(() => {
                                                         <label for="validationCustom01" className="form-label">Project create permission</label>
                                                         <select onChange = {(b) => {
                                                             handleUpdateUserOneChange(b)
-                                                        }}  name = "project_create" className="form-control" id="validationCustom01" value={oneUser.project_create} required >
+                                                        }}  name = "project_create" className="form-control" id="validationCustom01" value={oneUser.project_create}  >
                                                             <option selected disabled>Please select option</option>
                                                             <option value = "YES">YES</option>
                                                             <option value = "NO">NO</option>

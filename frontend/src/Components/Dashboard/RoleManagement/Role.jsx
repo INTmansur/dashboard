@@ -5,8 +5,14 @@ import {Formik} from "formik";
 import * as Yup from "yup";
 
 import axios from "axios";
+// import { Notification } from 'rsuite';
 
 const Role = () => {
+
+
+
+   
+
 const [AllUser, setAllUser] = useState([]);
 
     const [page, setPage] = useState(1);
@@ -73,7 +79,7 @@ const handlePageChange = (event, value) => {
 
 
 const validationRoleSchema = Yup.object({
-    role : Yup.string().required("Required")
+    role : Yup.string().required("please enter the role")
 })
 
 useEffect(() => {
@@ -95,6 +101,7 @@ useEffect(() => {
                     <div className="col-5">
                     <label className = "form-label">Search by Name</label>
                         <input onChange = {(e) => {
+                            // open();
                             setName(e.target.value);
                             handleNameSearch(e.target.value);
                         }} value = {Name} type = "text" name = "name" className = "form-control" placeholder = "enter the name" />
@@ -189,10 +196,10 @@ useEffect(() => {
                                                         className = "row g-3 needs-validation">
                                                              <div className = "col-md-11" >
                                                                 <label for = "validationCustom" htmlFor = "role" className = "form-label">Role</label>
-                                                                <input onChange = {props.handleChange} onBlur = {props.handleBlur} type = "text" name = "role" className = "form-control" id = "validationCustom role" value = {props.values.role} required />
+                                                                <input onChange = {props.handleChange} onBlur = {props.handleBlur} type = "text" name = "role" className = "form-control" id = "validationCustom role" value = {props.values.role} />
                                                                 {
                                                                     props.touched.role && props.errors.role ? (
-                                                                        <div>{props.errors.role}</div>
+                                                                        <div style = {{color : "red"}}>{props.errors.role}</div>
                                                                     ) : null
                                                                 }
                                                             </div> 

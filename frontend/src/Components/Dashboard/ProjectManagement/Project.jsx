@@ -242,8 +242,8 @@ const handleDeleteProject = async (id) => {
 
 
     const validationProjectSchema = Yup.object({
-        title : Yup.string().required("Required"),
-        description : Yup.string().required("Required")
+        title : Yup.string().required("Title is required"),
+        description : Yup.string().required("Description is required")
     })
 
     useEffect(() => {
@@ -315,19 +315,19 @@ const handleDeleteProject = async (id) => {
 
                                                             <div className = "col-md-11" >
                                                                 <label for = "validationCustom" htmlFor = "title" className = "form-label">Title</label>
-                                                                <input onChange = {props.handleChange} onBlur = {props.handleBlur} type = "text" name = "title" className = "form-control" id = "validationCustom title" value = {props.values.title} required />
+                                                                <input onChange = {props.handleChange} onBlur = {props.handleBlur} type = "text" name = "title" className = "form-control" id = "validationCustom title" value = {props.values.title}  />
                                                                 {
                                                                     props.touched.title && props.errors.title ? (
-                                                                        <div>{props.errors.title}</div>
+                                                                        <div style = {{color : "red"}}>{props.errors.title}</div>
                                                                     ) : null
                                                                 }
                                                             </div> 
                                                             <div className = "col-md-11" >
                                                                 <label for = "validationCustom" htmlFor = "description" className = "form-label">Description</label>
-                                                                <textarea onChange = {props.handleChange} onBlur = {props.handleBlur} type = "text" name = "description" className = "form-control" id = "validationCustom description" value = {props.values.description} required ></textarea>
+                                                                <textarea onChange = {props.handleChange} onBlur = {props.handleBlur} type = "text" name = "description" className = "form-control" id = "validationCustom description" value = {props.values.description}  ></textarea>
                                                                 {
                                                                     props.touched.description && props.errors.description ? (
-                                                                        <div>{props.errors.description}</div>
+                                                                        <div style = {{color : "red"}}>{props.errors.description}</div>
                                                                     ) : null
                                                                 }
                                                             </div> 
@@ -441,19 +441,19 @@ const handleDeleteProject = async (id) => {
 
                                                                 <div className = "col-md-11" >
                                                                     <label for = "validationCustom" htmlFor = "title" className = "form-label">Title</label>
-                                                                    <input onChange = {props.handleChange} onBlur = {props.handleBlur} type = "text" name = "title" className = "form-control" id = "validationCustom title" value = {props.values.title} required />
+                                                                    <input onChange = {props.handleChange} onBlur = {props.handleBlur} type = "text" name = "title" className = "form-control" id = "validationCustom title" value = {props.values.title}  />
                                                                     {
                                                                         props.touched.title && props.errors.title ? (
-                                                                            <div>{props.errors.title}</div>
+                                                                            <div style = {{color : "red"}}>{props.errors.title}</div>
                                                                         ) : null
                                                                     }
                                                                 </div> 
                                                                 <div className = "col-md-11" >
                                                                     <label for = "validationCustom" htmlFor = "description" className = "form-label">Description</label>
-                                                                    <textarea onChange = {props.handleChange} onBlur = {props.handleBlur} type = "text" name = "description" className = "form-control" id = "validationCustom description" value = {props.values.description} required ></textarea>
+                                                                    <textarea onChange = {props.handleChange} onBlur = {props.handleBlur} type = "text" name = "description" className = "form-control" id = "validationCustom description" value = {props.values.description}  ></textarea>
                                                                     {
                                                                         props.touched.description && props.errors.description ? (
-                                                                            <div>{props.errors.description}</div>
+                                                                            <div style = {{color : "red"}}>{props.errors.description}</div>
                                                                         ) : null
                                                                     }
                                                                 </div> 
