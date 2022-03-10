@@ -1,10 +1,36 @@
 const express = require("express");
 const app = express();
+var cors = require('cors');
+var bodyParser = require('body-parser')
 
 app.use(express.json());
+app.use(cors())
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }))
+
+// parse application/json
+app.use(bodyParser.json())
 
 
 app.use(express.urlencoded({ extended: false }));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //All controllers 
 
 const projectController = require("./controllers/project.controller")

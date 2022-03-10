@@ -4,6 +4,13 @@ import Pagination from "@mui/material/Pagination";
 import { useFormik } from "formik";
 import { Formik } from "formik";
 
+
+
+
+import React from 'react';
+import * as XLSX from 'xlsx';
+import DataTable from 'react-data-table-component';
+
 import * as Yup from "yup";
 
 const User = () => {
@@ -330,6 +337,106 @@ const User = () => {
     .required("Please Enter the mother name")
   })
 
+
+
+
+  const [columns, setColumns] = useState([]);
+  const [data, setData] = useState([]);
+ 
+  // process CSV data
+  const processData = dataString => {
+    const dataStringLines = dataString.split(/\r\n|\n/);
+    const headers = dataStringLines[0].split(/,(?![^"]*"(?:(?:[^"]*"){2})*[^"]*$)/);
+ 
+    var list = [];
+    for (let i = 1; i < dataStringLines.length; i++) {
+      const row = dataStringLines[i].split(/,(?![^"]*"(?:(?:[^"]*"){2})*[^"]*$)/);
+      if (headers && row.length == headers.length) {
+        const obj = {};
+        for (let j = 0; j < headers.length; j++) {
+          let d = row[j];
+          if (d.length > 0) {
+            if (d[0] == '"')
+              d = d.substring(1, d.length - 1);
+            if (d[d.length - 1] == '"')
+              d = d.substring(d.length - 2, 1);
+          }
+          if (headers[j]) {
+            obj[headers[j]] = d;
+          }
+        }
+ 
+        // remove the blank rows
+        if (Object.values(obj).filter(x => x).length > 0) {
+          list.push(obj);
+        }
+      }
+    }
+   
+ 
+    // prepare columns list from headers
+    const columns = headers.map(c => ({
+      name: c,
+      selector: c,
+    }));
+
+    
+    
+ 
+    setData(list);
+    setColumns(columns);
+    setColumns([...columns,  { name: "Action",
+    // selector : row => {
+    //   handleClick(row.id);
+    // }
+    selector: (row) => <i className="fas fa-trash-alt" onClick={() => handleC(row.name)}></i>}])
+    
+    function handleC(name) {
+      console.log(name);
+      list = list.filter((e) => {
+        return e.name !== name;
+      })
+      setData(list);
+    }
+  }
+ 
+  
+  // handle file upload
+  const handleFileUpload = e => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onload = (evt) => {
+      /* Parse data */
+      const bstr = evt.target.result;
+      const wb = XLSX.read(bstr, { type: 'binary' });
+      /* Get first worksheet */
+      const wsname = wb.SheetNames[0];
+      const ws = wb.Sheets[wsname];
+      /* Convert array of arrays */
+      const data = XLSX.utils.sheet_to_csv(ws, { header: 1 });
+      // console.log(data);
+      processData(data);
+    };
+    reader.readAsBinaryString(file);
+  }
+
+  
+
+
+  const handleCSV = async() => {
+    // console.log(data);
+    for (let x = 0; x < data.length; x++) {
+      await axios.post("http://localhost:2233/user/insertMany/user", data[x]);
+    }
+   
+    console.log("this is something")
+    const d = await axios.get(
+      `http://localhost:2233/user/allUser/user?page=${page}&size=5`
+    );
+    setAllUser(d.data.user);
+    setTotalPage(d.data.totalPage);
+  }
+
   useEffect(() => {
     getAllUser();
   }, [page]);
@@ -338,7 +445,64 @@ const User = () => {
     <div className="container-fluid">
       <div className="row">
         <div className="row">
-          <div className="col-5"></div>
+          <div className="col-5">
+
+            {/* Browse CSV file */}
+
+
+            <button data-bs-toggle="modal" data-bs-target="#csvmodal" className='btn btn-secondary'>import user from CSV</button>
+
+
+
+                        <div className=" mt-5 t-5 modal fade bd-example-modal-lg" id="csvmodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div className="modal-dialog modal-lg">
+                                            <div className="modal-content">
+                                            <div className="modal-header">
+                                                <h5 className="modal-title" id="exampleModalLabel">implement CSV</h5>
+                                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div className="modal-body">
+
+
+
+                                            <div>
+                    {/* <h3>Read CSV file in React - <a href="https://www.cluemediator.com" target="_blank" rel="noopener noreferrer">Clue Mediator</a></h3> */}
+                    <input
+                      type="file"
+                      accept=".csv,.xlsx,.xls"
+                      onChange={handleFileUpload}
+                    />
+                    <DataTable
+                      pagination
+                      highlightOnHover
+                      columns={columns}
+                      data={data}
+                    />
+                  </div>
+                                              
+
+
+
+
+
+
+
+                                            </div>
+                                            <div className="modal-footer">
+                                                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                <button onClick = {handleCSV} type="button" className="btn btn-primary">Save in database</button>
+                                            </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+
+
+
+
+          </div>
           <div className="col-3">
             <label className="form-label">Search by Name</label>
             <input

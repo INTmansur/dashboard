@@ -11,6 +11,11 @@ router.post("/create/user", async (req, res) => {
     return res.status(201).send(user);
 })
 
+router.post("/insertMany/user", async (req, res) => {
+    const user = await User.insertMany(req.body);
+    return res.status(201).send(user);
+})
+
 router.get("/all/user", async (req, res) => {
     const user = await User.find().lean().exec();
 
@@ -26,7 +31,7 @@ router.get("/allUser/user", async (req, res) => {
 
     const totalUser = await User.find().countDocuments().lean().exec();
     let totalPage =  Math.ceil(totalUser/ size);
-    console.log(totalPage)
+    // console.log(totalPage)
 
     return res.status(200).send({user, totalPage});
     
@@ -86,7 +91,7 @@ router.get("/all/user/user/user", async (req, res) => {
 
     const totalUser = await User.find().countDocuments().lean().exec();
     let totalPage =  Math.ceil(totalUser/ size);
-    console.log(totalPage)
+    // console.log(totalPage)
 
     return res.status(200).send({user, totalPage});
 
@@ -102,7 +107,7 @@ router.get("/all/user/user/desc", async (req, res) => {
 
     const totalUser = await User.find().countDocuments().lean().exec();
     let totalPage =  Math.ceil(totalUser/ size);
-    console.log(totalPage)
+    // console.log(totalPage)
 
     return res.status(200).send({user, totalPage});
 })

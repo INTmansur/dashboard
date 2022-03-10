@@ -155,25 +155,7 @@ useEffect(() => {
 
 
 
-                                                {/* modal body */}
-                                                {/* <form onSubmit = {(a) => {
-                                                      a.preventDefault();
-                                                    //   handleUserUpdateOne(e._id)
-                                                    }} className="row g-3 needs-validation" novalidate>
-                                                
-                                                    <div className="col-md-11">
-                                                        <label for="validationCustom01" className="form-label">User Role</label>
-                                                        <input onChange = {(b) => {
-                                                            handleUpdateUserOneChange(b)
-                                                        }} type="text" name = "role" placeholder = "Enter the role" className="form-control" id="validationCustom01" value={oneUser.role} required />
-                                                        <div className="valid-feedback">
-                                                        Looks good!
-                                                        </div>
-                                                    </div>
-                                                   
-                                                    
-                                                    
-                                                </form> */}
+                                              
 
                                                 <Formik validationSchema = {validationRoleSchema}
                                                     initialValues = {{
