@@ -31,6 +31,16 @@ import MailIcon from '@mui/icons-material/Mail';
 
 
 
+
+import Menu from '@mui/material/Menu';
+import Container from '@mui/material/Container';
+import Avatar from '@mui/material/Avatar';
+import Tooltip from '@mui/material/Tooltip';
+import MenuItem from '@mui/material/MenuItem';
+
+
+
+
 //Importing all the Management pagemeasuring
 
 
@@ -38,9 +48,13 @@ import {User} from "./UserMangement/User"
 import {Role} from "./RoleManagement/Role";
 import {Permission} from "./PermissionManagement/Permission";
 import {Project} from "./ProjectManagement/Project";
-
+import {Profilea} from "./Profile/Profile";
 
 import "./Dashboard.css";
+
+
+
+
 
 const drawerWidth = 240;
 
@@ -92,6 +106,7 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 export default function Dashboard() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const [user, setUser] = useState({})
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -121,9 +136,10 @@ export default function Dashboard() {
   const [permissionManagement, setPermissionManagement] = useState(false);
   const [roleManagement, setRoleManagement] = useState(false);
   const [projectManagement, setProjectManagement] = useState(false);
+  const [profileManagement, setProfileManagement] = useState(false);
 
 
-
+  
   //Handle click Dashboard management
 
 
@@ -132,6 +148,7 @@ export default function Dashboard() {
     setPermissionManagement(false);
     setRoleManagement(false);
     setProjectManagement(false);
+    setProfileManagement(false);
   }
 
   //Handle click user Management
@@ -142,6 +159,7 @@ export default function Dashboard() {
     setPermissionManagement(false);
     setRoleManagement(false);
     setProjectManagement(false);
+    setProfileManagement(false);
 
   }
 
@@ -154,6 +172,7 @@ export default function Dashboard() {
     setPermissionManagement(false);
     setRoleManagement(true);
     setProjectManagement(false);
+    setProfileManagement(false);
   }
 
 
@@ -166,6 +185,7 @@ export default function Dashboard() {
     setPermissionManagement(true);
     setRoleManagement(false);
     setProjectManagement(false);
+    setProfileManagement(false);
   }
 
 
@@ -177,7 +197,33 @@ export default function Dashboard() {
     setPermissionManagement(false);
     setRoleManagement(false);
     setProjectManagement(true);
+    setProfileManagement(false);
   }
+
+  const handleClickProfileManagement = () => {
+    setUserManagement(false);
+    setPermissionManagement(false);
+    setRoleManagement(false);
+    setProjectManagement(false);
+    setProfileManagement(true);
+  }
+
+  const [anchorElUser, setAnchorElUser] = React.useState(null);
+
+  const handleOpenUserMenu = (event) => {
+    setAnchorElUser(event.currentTarget);
+  };
+  const handleCloseUserMenu = () => {
+    setAnchorElUser(null);
+  };
+
+
+  useEffect(() => {
+
+    const use = JSON.parse(sessionStorage.getItem("userid"));
+    setUser(use);
+
+  }, [userManagement, permissionManagement, roleManagement, projectManagement, profileManagement])
 
   if(isAuth) {
     return <Redirect to = "/" />
@@ -201,8 +247,59 @@ export default function Dashboard() {
             Dashboard
           </Button>
           <div className = "logout">
-          <Button onClick = {handleLogout} sx={{ ml: 3 }} component = "div" variant = "h6">Logout</Button>
+          {/* <Button onClick = {handleLogout} sx={{ ml: 3 }} component = "div" variant = "h6">Logout</Button> */}
           </div>
+          <Box sx={{ flexGrow: 0 }}>
+            <Tooltip title="Open settings">
+              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                {
+                  user.profile_picture === "" ? (
+                    <Avatar alt={user.name} src="/static/images/avatar/2.jpg" />
+                  ) : (
+                    <Avatar alt={user.name} src={`uploads/${user.profile_picture}`} />
+
+                  )
+                }
+                
+              </IconButton>
+            </Tooltip>
+            <Menu
+              sx={{ mt: '45px' }}
+              id="menu-appbar"
+              anchorEl={anchorElUser}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              open={Boolean(anchorElUser)}
+              onClose={handleCloseUserMenu}
+
+            >
+
+
+
+              
+                <MenuItem key="profile" onClick={handleCloseUserMenu}>
+                  <Typography onClick = {handleClickProfileManagement} textAlign="center">Profile</Typography>
+
+                </MenuItem>
+                <MenuItem key="Dashboard" onClick={handleCloseUserMenu}>
+                  <Typography onClick = {dashboardClick} textAlign="center">Dashboard</Typography>
+
+                </MenuItem>
+                <MenuItem key="Logout" onClick={handleCloseUserMenu}>
+                  <Typography onClick = {handleLogout} textAlign="center">Logout</Typography>
+
+                </MenuItem>
+
+           
+            </Menu>
+          </Box>
           
         </Toolbar>
       </AppBar>
@@ -288,7 +385,7 @@ export default function Dashboard() {
 
 
           {
-          ((userManagement === false) && (permissionManagement === false) && (roleManagement === false) && (projectManagement === false)) ? (
+          ((userManagement === false) && (permissionManagement === false) && (roleManagement === false) && (projectManagement === false) && (profileManagement === false)) ? (
            <div>
               <Typography variant = "h2" paragraph>
               Welcome to the Dashboard
@@ -297,6 +394,16 @@ export default function Dashboard() {
         </div>
           ) : ("")
         }
+{/* profileManagement */}
+        {
+            ((userManagement === false) && (permissionManagement === false) && (roleManagement === false) && (projectManagement === false) && (profileManagement === true)) ? (
+              <Profilea />
+            ) : ("") 
+        }
+
+
+
+
 
         
       </Main>

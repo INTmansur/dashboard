@@ -10,6 +10,7 @@ import { Formik } from "formik";
 import React from 'react';
 import * as XLSX from 'xlsx';
 import DataTable from 'react-data-table-component';
+import BootstrapTable from 'react-bootstrap-table-next';
 
 import * as Yup from "yup";
 
@@ -472,6 +473,12 @@ const User = () => {
                       accept=".csv,.xlsx,.xls"
                       onChange={handleFileUpload}
                     />
+                    {/* <BootstrapTable
+                    pagination
+                    highlightOnHover
+                    columns = {columns}
+                    data = {data}
+                     /> */}
                     <DataTable
                       pagination
                       highlightOnHover

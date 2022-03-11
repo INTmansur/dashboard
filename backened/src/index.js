@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 var cors = require('cors');
+const path = require('path');
 var bodyParser = require('body-parser')
 
 app.use(express.json());
@@ -10,6 +11,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 
 // parse application/json
 app.use(bodyParser.json())
+app.use('/', express.static(path.join(__dirname, '/')));
 
 
 app.use(express.urlencoded({ extended: false }));

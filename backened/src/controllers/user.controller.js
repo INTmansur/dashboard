@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 
+
 //Creating project model
 const User = require("../models/user.model");
 
@@ -137,14 +138,26 @@ router.delete("/ondelete/user/:id", async (req, res) => {
 
 const jwt = require("jsonwebtoken")
 require("dotenv").config();
+var path = require('path');
 
 var newToken = (user) => {
     return jwt.sign({user}, process.env.KEY);
 }
 
+const upload = require("../middlewares/file-upload");
+const fs = require("fs");
+
 // const User = require("../models/user.model");
 
-
+router.post("/image/image/image/image/image/:id", upload.single("profile_picture"), async (req, res) => {
+    let user = await User.findOne({_id : req.params.id});
+    // const patha = user.profile_picture;
+    // fs.unlink(patha);
+    // path.basename('/Users/Refsnes/demo_path.js');
+    user.profile_picture = path.basename(req.file.path);
+   user =  await user.save();
+   return res.status(200).send(user);
+})
 
 router.post("/register", async (req, res) => {
     let user = await User.findOne({email: req.body.email}).lean().exec();
