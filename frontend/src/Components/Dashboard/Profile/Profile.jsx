@@ -125,8 +125,15 @@ const Profilea = () => {
                                         <div className = "col-2"></div>
                                         <div className = "col-8">
                                           {/* card-img-top */}
+                                            {
+                                                user.profile_picture === "" ? (
+                                                    <img src="https://icon-library.com/images/no-profile-picture-icon/no-profile-picture-icon-27.jpg" style={{ height: 300 }}   className="card-img-top" alt="..." />
+                                                ) : (
+                                                    <img src={`uploads/${user.profile_picture}`} style={{ height: 300 }}   className="card-img-top" alt="..." />
+                                                )
+                                            }
                                           
-                                            <img src={`uploads/${user.profile_picture}`} style={{ height: 300}}   className="card-img-top" alt="..." />
+                                           
                                             <form onSubmit={handleSubmit}>
                                         <input type="file" onChange={handleFileSelect} required/>
                                         <input type="submit" value="Update profile Picture" />

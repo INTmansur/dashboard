@@ -151,8 +151,14 @@ const fs = require("fs");
 
 router.post("/image/image/image/image/image/:id", upload.single("profile_picture"), async (req, res) => {
     let user = await User.findOne({_id : req.params.id});
-    // const patha = user.profile_picture;
-    // fs.unlink(patha);
+    const patha = path.join(__dirname, "../../../frontend/public/uploads/") + user.profile_picture;
+    console.log(patha);
+    
+    fs.unlink(patha, function (err) {
+        if (err) throw err;
+        // if no error, file has been deleted successfully
+        console.log('File deleted!');
+    });
     // path.basename('/Users/Refsnes/demo_path.js');
     user.profile_picture = path.basename(req.file.path);
    user =  await user.save();
